@@ -1,0 +1,3842 @@
+{
+  "phase": "Phase 4 - Exploratory Data Analysis (EDA)",
+  "status": "completed",
+  "started_utc": "2026-08-25T13:36:22.651087+00:00",
+  "finished_utc": "2026-08-25T13:36:28.398362+00:00",
+  "elapsed_seconds": 5.75,
+  "environment": {
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.4.6",
+    "matplotlib": "3.11.1",
+    "scipy": "not available",
+    "pyarrow": "25.0.1"
+  },
+  "reproducibility": {
+    "deterministic": true,
+    "randomness_used": false,
+    "inputs_read_only": true,
+    "outputs": [
+      "data/processed/eda/*.png",
+      "data/processed/eda_report.json"
+    ],
+    "note": "stats/figures are deterministic across runs on the same input + library versions; only the wall-clock timestamps in this report vary between runs"
+  },
+  "warnings": [
+    {
+      "scope": "ridership",
+      "message": "routes absent from ridership (no rows fabricated): J90, J99"
+    },
+    {
+      "scope": "cjtp",
+      "message": "1 record(s) have a missing CJTP value; excluded from CJTP statistics (not imputed)"
+    },
+    {
+      "scope": "cjtp",
+      "message": "some CJTP records have borough 'UNKNOWN'; reported as its own category, not dropped"
+    },
+    {
+      "scope": "cjtp",
+      "message": "22 project route(s) absent from CJTP data (no metrics fabricated)"
+    },
+    {
+      "scope": "bus_stops",
+      "message": "13 project route(s) have NO stop associations (not fabricated): B101, B91, B91A, B92, B98, B98V, BX18, BX90, BX99, D90, D99, F1, J99"
+    }
+  ],
+  "warning_count": 5,
+  "constraints_observed": [
+    "only Phase 3 processed datasets were read",
+    "nothing downloaded; data/raw untouched; Phase 3 pipeline unmodified",
+    "processed datasets not modified (proven by before/after fingerprints)",
+    "2.3 GB routes_clean.geojson never parsed (metadata from processing_report.json)",
+    "no fabricated or imputed data; missing routes/values left absent",
+    "no 24-hour ridership pattern claimed; bootstrap analysis deferred to a later phase",
+    "dashboard (Phase 5) not started"
+  ],
+  "analyses": {
+    "ridership": {
+      "dataset": "ridership_clean.parquet (+ ridership_by_route/_by_date/_by_hour)",
+      "totals": {
+        "total_ridership": 1207832,
+        "total_transfers": 213004,
+        "record_count": 200000,
+        "distinct_routes_in_ridership": 140,
+        "distinct_service_dates": 59,
+        "date_range": {
+          "start": "2023-01-01",
+          "end": "2023-02-28"
+        },
+        "reconciles_with_by_route": true
+      },
+      "descriptive_statistics": {
+        "per_record_ridership": {
+          "name": "ridership_per_record",
+          "count": 200000,
+          "missing": 0,
+          "mean": 6.03916,
+          "median": 0.0,
+          "std": 20.487678,
+          "min": 0.0,
+          "max": 438.0,
+          "q1": 0.0,
+          "q3": 0.0,
+          "iqr": 0.0,
+          "range": 438.0,
+          "skew": 5.999764
+        },
+        "per_record_transfers": {
+          "name": "transfers_per_record",
+          "count": 200000,
+          "missing": 0,
+          "mean": 1.06502,
+          "median": 0.0,
+          "std": 5.062564,
+          "min": 0.0,
+          "max": 186.0,
+          "q1": 0.0,
+          "q3": 0.0,
+          "iqr": 0.0,
+          "range": 186.0,
+          "skew": 9.374006
+        },
+        "per_route_total_ridership": {
+          "name": "total_ridership_per_route",
+          "count": 140,
+          "missing": 0,
+          "mean": 8627.371429,
+          "median": 5941.0,
+          "std": 8965.198807,
+          "min": 0.0,
+          "max": 44390.0,
+          "q1": 701.0,
+          "q3": 12975.0,
+          "iqr": 12274.0,
+          "range": 44390.0,
+          "skew": 1.223331
+        },
+        "per_route_mean_daily_ridership": {
+          "name": "mean_daily_ridership_per_route",
+          "count": 140,
+          "missing": 0,
+          "mean": 210.989374,
+          "median": 145.507966,
+          "std": 217.712844,
+          "min": 0.0,
+          "max": 1138.205128,
+          "q1": 24.235682,
+          "q3": 318.37386,
+          "iqr": 294.138178,
+          "range": 1138.205128,
+          "skew": 1.346184
+        },
+        "daily_total_ridership": {
+          "name": "total_ridership_per_day",
+          "count": 59,
+          "missing": 0,
+          "mean": 20471.728814,
+          "median": 22876.0,
+          "std": 6168.800045,
+          "min": 8931.0,
+          "max": 31720.0,
+          "q1": 14088.0,
+          "q3": 24772.5,
+          "iqr": 10684.5,
+          "range": 22789.0,
+          "skew": -0.311121
+        }
+      },
+      "by_route": {
+        "top_routes": [
+          {
+            "label": "B6",
+            "value": 44390.0,
+            "share_of_total_ridership_pct": 3.67518,
+            "mean_daily_ridership": 1138.205128
+          },
+          {
+            "label": "B35",
+            "value": 33612.0,
+            "share_of_total_ridership_pct": 2.782837,
+            "mean_daily_ridership": 908.432432
+          },
+          {
+            "label": "BX19",
+            "value": 29493.0,
+            "share_of_total_ridership_pct": 2.441813,
+            "mean_daily_ridership": 670.295455
+          },
+          {
+            "label": "B38",
+            "value": 29261.0,
+            "share_of_total_ridership_pct": 2.422605,
+            "mean_daily_ridership": 665.022727
+          },
+          {
+            "label": "B41",
+            "value": 29007.0,
+            "share_of_total_ridership_pct": 2.401576,
+            "mean_daily_ridership": 763.342105
+          },
+          {
+            "label": "B1",
+            "value": 28985.0,
+            "share_of_total_ridership_pct": 2.399754,
+            "mean_daily_ridership": 724.625
+          },
+          {
+            "label": "B82",
+            "value": 26303.0,
+            "share_of_total_ridership_pct": 2.177704,
+            "mean_daily_ridership": 584.511111
+          },
+          {
+            "label": "BX12-SBS",
+            "value": 26250.0,
+            "share_of_total_ridership_pct": 2.173315,
+            "mean_daily_ridership": 690.789474
+          },
+          {
+            "label": "B46-SBS",
+            "value": 25557.0,
+            "share_of_total_ridership_pct": 2.11594,
+            "mean_daily_ridership": 567.933333
+          },
+          {
+            "label": "B8",
+            "value": 25212.0,
+            "share_of_total_ridership_pct": 2.087376,
+            "mean_daily_ridership": 614.926829
+          }
+        ],
+        "bottom_routes": [
+          {
+            "label": "F1",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "D99",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "D90",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "BX99",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "BX95",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "BX92",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "BX90",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "B99",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "B98V",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          },
+          {
+            "label": "B98",
+            "value": 0.0,
+            "share_of_total_ridership_pct": 0.0,
+            "mean_daily_ridership": 0.0
+          }
+        ],
+        "route_level_variation": {
+          "route_count": 140,
+          "mean_total_ridership_per_route": 8627.371429,
+          "std_total_ridership_per_route": 8965.198807,
+          "coefficient_of_variation": 1.039158,
+          "max_over_min_ratio": null,
+          "top_10_routes_share_pct": 24.6781,
+          "top_20_routes_share_pct": 42.841552,
+          "interpretation": "higher coefficient of variation and top-10 share => ridership concentrated in a few routes"
+        }
+      },
+      "daily": {
+        "weekday_vs_weekend": [
+          {
+            "day_type": "weekday",
+            "distinct_dates": 42,
+            "mean_daily_ridership": 23717.047619,
+            "median_daily_ridership": 23889.0,
+            "total_ridership": 996116
+          },
+          {
+            "day_type": "weekend",
+            "distinct_dates": 17,
+            "mean_daily_ridership": 12453.882353,
+            "median_daily_ridership": 12254.0,
+            "total_ridership": 211716
+          }
+        ],
+        "by_day_of_week": [
+          {
+            "day_of_week": "Monday",
+            "distinct_dates": 9,
+            "mean_daily_ridership": 22545.777778,
+            "total_ridership": 202912
+          },
+          {
+            "day_of_week": "Tuesday",
+            "distinct_dates": 9,
+            "mean_daily_ridership": 24210.666667,
+            "total_ridership": 217896
+          },
+          {
+            "day_of_week": "Wednesday",
+            "distinct_dates": 8,
+            "mean_daily_ridership": 25667.375,
+            "total_ridership": 205339
+          },
+          {
+            "day_of_week": "Thursday",
+            "distinct_dates": 8,
+            "mean_daily_ridership": 23891.125,
+            "total_ridership": 191129
+          },
+          {
+            "day_of_week": "Friday",
+            "distinct_dates": 8,
+            "mean_daily_ridership": 22355.0,
+            "total_ridership": 178840
+          },
+          {
+            "day_of_week": "Saturday",
+            "distinct_dates": 8,
+            "mean_daily_ridership": 13705.875,
+            "total_ridership": 109647
+          },
+          {
+            "day_of_week": "Sunday",
+            "distinct_dates": 9,
+            "mean_daily_ridership": 11341.0,
+            "total_ridership": 102069
+          }
+        ],
+        "busiest_date": {
+          "service_date": "2023-02-15",
+          "total_ridership": 31720
+        },
+        "quietest_date": {
+          "service_date": "2023-01-01",
+          "total_ridership": 8931
+        }
+      },
+      "hourly": {
+        "observed_hour_buckets": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22
+        ],
+        "distinct_hour_buckets": 12,
+        "diurnal_analysis_supported": false,
+        "buckets": [
+          {
+            "hour": 0,
+            "total_ridership": 11459,
+            "record_count": 16667,
+            "distinct_routes": 136
+          },
+          {
+            "hour": 2,
+            "total_ridership": 2245,
+            "record_count": 16667,
+            "distinct_routes": 132
+          },
+          {
+            "hour": 4,
+            "total_ridership": 9356,
+            "record_count": 16667,
+            "distinct_routes": 134
+          },
+          {
+            "hour": 6,
+            "total_ridership": 126270,
+            "record_count": 16667,
+            "distinct_routes": 135
+          },
+          {
+            "hour": 8,
+            "total_ridership": 215652,
+            "record_count": 16667,
+            "distinct_routes": 131
+          },
+          {
+            "hour": 10,
+            "total_ridership": 107988,
+            "record_count": 16667,
+            "distinct_routes": 136
+          },
+          {
+            "hour": 12,
+            "total_ridership": 128721,
+            "record_count": 16667,
+            "distinct_routes": 133
+          },
+          {
+            "hour": 14,
+            "total_ridership": 163266,
+            "record_count": 16667,
+            "distinct_routes": 133
+          },
+          {
+            "hour": 16,
+            "total_ridership": 189531,
+            "record_count": 16666,
+            "distinct_routes": 138
+          },
+          {
+            "hour": 18,
+            "total_ridership": 160183,
+            "record_count": 16666,
+            "distinct_routes": 133
+          },
+          {
+            "hour": 20,
+            "total_ridership": 63574,
+            "record_count": 16666,
+            "distinct_routes": 132
+          },
+          {
+            "hour": 22,
+            "total_ridership": 29587,
+            "record_count": 16666,
+            "distinct_routes": 135
+          }
+        ],
+        "caveat": "The processed ridership extract (mta_ridership_dev.parquet) is a development subsample: 200,000 records spanning only 2023-01-01 to 2023-02-28 (59 distinct service dates) with timestamps bucketed to 12 even hours (0,2,...,22). It does NOT support meaningful 24-hour / diurnal ridership pattern claims; hourly totals are reported descriptively only, and no continuous hourly-profile figure is drawn."
+      },
+      "outliers": {
+        "per_route_total_ridership": {
+          "method": "Tukey IQR (k=1.5)",
+          "count_evaluated": 140,
+          "q1": 701.0,
+          "q3": 12975.0,
+          "iqr": 12274.0,
+          "lower_fence": -17710.0,
+          "upper_fence": 31386.0,
+          "outlier_count": 2,
+          "lower_outlier_count": 0,
+          "upper_outlier_count": 2,
+          "outlier_percentage": 1.428571,
+          "examples": [
+            {
+              "value": 44390.0,
+              "label": "B6"
+            },
+            {
+              "value": 33612.0,
+              "label": "B35"
+            }
+          ],
+          "action": "reported only - not removed"
+        },
+        "daily_total_ridership": {
+          "method": "Tukey IQR (k=1.5)",
+          "count_evaluated": 59,
+          "q1": 14088.0,
+          "q3": 24772.5,
+          "iqr": 10684.5,
+          "lower_fence": -1938.75,
+          "upper_fence": 40799.25,
+          "outlier_count": 0,
+          "lower_outlier_count": 0,
+          "upper_outlier_count": 0,
+          "outlier_percentage": 0.0,
+          "examples": [],
+          "action": "reported only - not removed"
+        },
+        "per_record_ridership": {
+          "method": "Tukey IQR (k=1.5)",
+          "count_evaluated": 200000,
+          "q1": 0.0,
+          "q3": 0.0,
+          "iqr": 0.0,
+          "lower_fence": 0.0,
+          "upper_fence": 0.0,
+          "outlier_count": 43881,
+          "lower_outlier_count": 0,
+          "upper_outlier_count": 43881,
+          "outlier_percentage": 21.9405,
+          "examples": [
+            {
+              "value": 438.0,
+              "label": "B6"
+            },
+            {
+              "value": 419.0,
+              "label": "B6"
+            },
+            {
+              "value": 411.0,
+              "label": "BX12-SBS"
+            },
+            {
+              "value": 410.0,
+              "label": "B6"
+            },
+            {
+              "value": 403.0,
+              "label": "B6"
+            },
+            {
+              "value": 398.0,
+              "label": "B6"
+            },
+            {
+              "value": 393.0,
+              "label": "B6"
+            },
+            {
+              "value": 390.0,
+              "label": "B6"
+            },
+            {
+              "value": 385.0,
+              "label": "B6"
+            },
+            {
+              "value": 384.0,
+              "label": "B6"
+            },
+            {
+              "value": 383.0,
+              "label": "BX12-SBS"
+            },
+            {
+              "value": 379.0,
+              "label": "B6"
+            },
+            {
+              "value": 378.0,
+              "label": "B6"
+            },
+            {
+              "value": 374.0,
+              "label": "B6"
+            },
+            {
+              "value": 367.0,
+              "label": "B38"
+            },
+            {
+              "value": 364.0,
+              "label": "B6"
+            },
+            {
+              "value": 357.0,
+              "label": "B6"
+            },
+            {
+              "value": 357.0,
+              "label": "B38"
+            },
+            {
+              "value": 346.0,
+              "label": "B9"
+            },
+            {
+              "value": 340.0,
+              "label": "B9"
+            },
+            {
+              "value": 332.0,
+              "label": "B9"
+            },
+            {
+              "value": 332.0,
+              "label": "B38"
+            },
+            {
+              "value": 329.0,
+              "label": "B6"
+            },
+            {
+              "value": 329.0,
+              "label": "B6"
+            },
+            {
+              "value": 328.0,
+              "label": "B38"
+            }
+          ],
+          "action": "reported only - not removed"
+        }
+      },
+      "route_coverage": {
+        "observed_route_count": 140,
+        "project_route_count": 142,
+        "matching_route_count": 140,
+        "coverage_percentage": 98.59,
+        "project_routes_missing_from_dataset": [
+          "J90",
+          "J99"
+        ],
+        "dataset_routes_not_in_project_reference": []
+      }
+    },
+    "cjtp": {
+      "dataset": "customer_journey_clean.parquet (+ cjtp_by_route)",
+      "metric": "customer_journey_time_performance",
+      "overall_distribution": {
+        "name": "customer_journey_time_performance_pct",
+        "count": 67942,
+        "missing": 1,
+        "mean": 67.314288,
+        "median": 69.164977,
+        "std": 13.691494,
+        "min": 0.0,
+        "max": 100.0,
+        "q1": 61.208934,
+        "q3": 76.234567,
+        "iqr": 15.025633,
+        "range": 100.0,
+        "skew": -1.098618,
+        "unit": "percent (0-100; higher = more on-time)",
+        "record_count": 67943,
+        "customer_weighted_mean": 69.583452
+      },
+      "missing_cjtp_values": 1,
+      "by_route": {
+        "project_route_count": 120,
+        "all_route_count": 393,
+        "project_customer_weighted_cjtp": {
+          "name": "customer_weighted_cjtp_project_routes",
+          "count": 120,
+          "missing": 0,
+          "mean": 65.5291,
+          "median": 67.321354,
+          "std": 9.32916,
+          "min": 26.71523,
+          "max": 86.53667,
+          "q1": 63.113014,
+          "q3": 70.695919,
+          "iqr": 7.582905,
+          "range": 59.82144,
+          "skew": -1.411785
+        },
+        "all_routes_customer_weighted_cjtp": {
+          "name": "customer_weighted_cjtp_all_routes",
+          "count": 392,
+          "missing": 1,
+          "mean": 66.034502,
+          "median": 68.325634,
+          "std": 11.279657,
+          "min": 21.168361,
+          "max": 86.79541,
+          "q1": 62.159267,
+          "q3": 73.164968,
+          "iqr": 11.005702,
+          "range": 65.627049,
+          "skew": -1.201225
+        },
+        "top_performing_routes": [
+          {
+            "label": "BX46",
+            "value": 86.53667,
+            "record_count": 204.0,
+            "total_customers": 1343324.426443,
+            "mean_cjtp_unweighted": 86.089812
+          },
+          {
+            "label": "B42",
+            "value": 82.313328,
+            "record_count": 170.0,
+            "total_customers": 7383792.387892,
+            "mean_cjtp_unweighted": 83.037328
+          },
+          {
+            "label": "B2",
+            "value": 82.157722,
+            "record_count": 204.0,
+            "total_customers": 3732227.734258,
+            "mean_cjtp_unweighted": 82.162649
+          },
+          {
+            "label": "B31",
+            "value": 81.211892,
+            "record_count": 204.0,
+            "total_customers": 4852713.771299,
+            "mean_cjtp_unweighted": 81.458891
+          },
+          {
+            "label": "BX29",
+            "value": 81.067923,
+            "record_count": 204.0,
+            "total_customers": 3477305.561152,
+            "mean_cjtp_unweighted": 82.006515
+          },
+          {
+            "label": "BX13",
+            "value": 78.379937,
+            "record_count": 204.0,
+            "total_customers": 27332058.303827,
+            "mean_cjtp_unweighted": 78.359001
+          },
+          {
+            "label": "BX35",
+            "value": 76.086399,
+            "record_count": 204.0,
+            "total_customers": 34313605.441992,
+            "mean_cjtp_unweighted": 75.999421
+          },
+          {
+            "label": "BX24",
+            "value": 75.348173,
+            "record_count": 204.0,
+            "total_customers": 1684431.555922,
+            "mean_cjtp_unweighted": 76.627163
+          },
+          {
+            "label": "BX12",
+            "value": 74.84129,
+            "record_count": 204.0,
+            "total_customers": 23747850.572028,
+            "mean_cjtp_unweighted": 74.132152
+          },
+          {
+            "label": "BX9",
+            "value": 74.638494,
+            "record_count": 204.0,
+            "total_customers": 59107019.004232,
+            "mean_cjtp_unweighted": 74.782468
+          }
+        ],
+        "bottom_performing_routes": [
+          {
+            "label": "BM2",
+            "value": 26.71523,
+            "record_count": 204.0,
+            "total_customers": 1555201.858105,
+            "mean_cjtp_unweighted": 27.803056
+          },
+          {
+            "label": "BM5",
+            "value": 36.737039,
+            "record_count": 204.0,
+            "total_customers": 1318192.235993,
+            "mean_cjtp_unweighted": 38.761122
+          },
+          {
+            "label": "BXM3",
+            "value": 39.148667,
+            "record_count": 204.0,
+            "total_customers": 1423514.560118,
+            "mean_cjtp_unweighted": 39.401365
+          },
+          {
+            "label": "BXM8",
+            "value": 40.148039,
+            "record_count": 204.0,
+            "total_customers": 2869631.309916,
+            "mean_cjtp_unweighted": 40.125384
+          },
+          {
+            "label": "BM1",
+            "value": 41.284979,
+            "record_count": 204.0,
+            "total_customers": 2012389.646353,
+            "mean_cjtp_unweighted": 42.856603
+          },
+          {
+            "label": "BM3",
+            "value": 42.72185,
+            "record_count": 204.0,
+            "total_customers": 1403129.498296,
+            "mean_cjtp_unweighted": 43.562461
+          },
+          {
+            "label": "BXM7",
+            "value": 46.760314,
+            "record_count": 204.0,
+            "total_customers": 4395445.36146,
+            "mean_cjtp_unweighted": 46.04785
+          },
+          {
+            "label": "BM4",
+            "value": 47.522832,
+            "record_count": 204.0,
+            "total_customers": 1047747.41955,
+            "mean_cjtp_unweighted": 48.926015
+          },
+          {
+            "label": "BXM2",
+            "value": 48.724427,
+            "record_count": 204.0,
+            "total_customers": 1283407.21532,
+            "mean_cjtp_unweighted": 49.088254
+          },
+          {
+            "label": "B39",
+            "value": 50.264259,
+            "record_count": 170.0,
+            "total_customers": 309686.364483,
+            "mean_cjtp_unweighted": 50.885845
+          }
+        ],
+        "metric_note": "ranked by customer_weighted_cjtp among the project routes present in the CJTP dataset; higher = more on-time"
+      },
+      "by_month": [
+        {
+          "month": "2017-08",
+          "record_count": 644,
+          "total_customers": 48234096,
+          "mean_cjtp": 73.033195,
+          "customer_weighted_cjtp": 74.59567
+        },
+        {
+          "month": "2017-09",
+          "record_count": 646,
+          "total_customers": 45813753,
+          "mean_cjtp": 63.452588,
+          "customer_weighted_cjtp": 68.257161
+        },
+        {
+          "month": "2017-10",
+          "record_count": 646,
+          "total_customers": 51180536,
+          "mean_cjtp": 62.437779,
+          "customer_weighted_cjtp": 68.460531
+        },
+        {
+          "month": "2017-11",
+          "record_count": 650,
+          "total_customers": 46030533,
+          "mean_cjtp": 61.66713,
+          "customer_weighted_cjtp": 68.531652
+        },
+        {
+          "month": "2017-12",
+          "record_count": 646,
+          "total_customers": 46681377,
+          "mean_cjtp": 66.402395,
+          "customer_weighted_cjtp": 71.497229
+        },
+        {
+          "month": "2018-01",
+          "record_count": 646,
+          "total_customers": 48425012,
+          "mean_cjtp": 67.736519,
+          "customer_weighted_cjtp": 72.452825
+        },
+        {
+          "month": "2018-02",
+          "record_count": 646,
+          "total_customers": 42345286,
+          "mean_cjtp": 70.877294,
+          "customer_weighted_cjtp": 74.329053
+        },
+        {
+          "month": "2018-03",
+          "record_count": 646,
+          "total_customers": 47252938,
+          "mean_cjtp": 66.960072,
+          "customer_weighted_cjtp": 71.182812
+        },
+        {
+          "month": "2018-04",
+          "record_count": 646,
+          "total_customers": 46510524,
+          "mean_cjtp": 69.001704,
+          "customer_weighted_cjtp": 73.575719
+        },
+        {
+          "month": "2018-05",
+          "record_count": 646,
+          "total_customers": 46189018,
+          "mean_cjtp": 63.691141,
+          "customer_weighted_cjtp": 69.003684
+        },
+        {
+          "month": "2018-06",
+          "record_count": 646,
+          "total_customers": 44945591,
+          "mean_cjtp": 67.300342,
+          "customer_weighted_cjtp": 71.624729
+        },
+        {
+          "month": "2018-07",
+          "record_count": 646,
+          "total_customers": 42770065,
+          "mean_cjtp": 72.309898,
+          "customer_weighted_cjtp": 74.739101
+        },
+        {
+          "month": "2018-08",
+          "record_count": 646,
+          "total_customers": 46003838,
+          "mean_cjtp": 73.673971,
+          "customer_weighted_cjtp": 75.60288
+        },
+        {
+          "month": "2018-09",
+          "record_count": 650,
+          "total_customers": 42015942,
+          "mean_cjtp": 62.884072,
+          "customer_weighted_cjtp": 68.730981
+        },
+        {
+          "month": "2018-10",
+          "record_count": 654,
+          "total_customers": 49941784,
+          "mean_cjtp": 62.608915,
+          "customer_weighted_cjtp": 68.966437
+        },
+        {
+          "month": "2018-11",
+          "record_count": 650,
+          "total_customers": 42730082,
+          "mean_cjtp": 62.256241,
+          "customer_weighted_cjtp": 68.227882
+        },
+        {
+          "month": "2018-12",
+          "record_count": 650,
+          "total_customers": 43698955,
+          "mean_cjtp": 67.982364,
+          "customer_weighted_cjtp": 71.691851
+        },
+        {
+          "month": "2019-01",
+          "record_count": 665,
+          "total_customers": 57351366,
+          "mean_cjtp": 70.195237,
+          "customer_weighted_cjtp": 73.217823
+        },
+        {
+          "month": "2019-02",
+          "record_count": 665,
+          "total_customers": 50102455,
+          "mean_cjtp": 67.138349,
+          "customer_weighted_cjtp": 70.559179
+        },
+        {
+          "month": "2019-03",
+          "record_count": 665,
+          "total_customers": 50157041,
+          "mean_cjtp": 64.904943,
+          "customer_weighted_cjtp": 68.722347
+        },
+        {
+          "month": "2019-04",
+          "record_count": 667,
+          "total_customers": 51793676,
+          "mean_cjtp": 67.290781,
+          "customer_weighted_cjtp": 69.890835
+        },
+        {
+          "month": "2019-05",
+          "record_count": 667,
+          "total_customers": 51910113,
+          "mean_cjtp": 63.069239,
+          "customer_weighted_cjtp": 66.429358
+        },
+        {
+          "month": "2019-06",
+          "record_count": 667,
+          "total_customers": 47126313,
+          "mean_cjtp": 63.71281,
+          "customer_weighted_cjtp": 66.827143
+        },
+        {
+          "month": "2019-07",
+          "record_count": 663,
+          "total_customers": 50793978,
+          "mean_cjtp": 69.3394,
+          "customer_weighted_cjtp": 70.226878
+        },
+        {
+          "month": "2019-08",
+          "record_count": 662,
+          "total_customers": 48857841,
+          "mean_cjtp": 72.991754,
+          "customer_weighted_cjtp": 72.719442
+        },
+        {
+          "month": "2019-09",
+          "record_count": 668,
+          "total_customers": 50311625,
+          "mean_cjtp": 59.696184,
+          "customer_weighted_cjtp": 63.853094
+        },
+        {
+          "month": "2019-10",
+          "record_count": 668,
+          "total_customers": 59370127,
+          "mean_cjtp": 63.151248,
+          "customer_weighted_cjtp": 66.974742
+        },
+        {
+          "month": "2019-11",
+          "record_count": 668,
+          "total_customers": 51325926,
+          "mean_cjtp": 62.651263,
+          "customer_weighted_cjtp": 66.494437
+        },
+        {
+          "month": "2019-12",
+          "record_count": 668,
+          "total_customers": 53500173,
+          "mean_cjtp": 63.641842,
+          "customer_weighted_cjtp": 67.185873
+        },
+        {
+          "month": "2020-01",
+          "record_count": 662,
+          "total_customers": 53240081,
+          "mean_cjtp": 70.518123,
+          "customer_weighted_cjtp": 72.530333
+        },
+        {
+          "month": "2020-02",
+          "record_count": 662,
+          "total_customers": 48222018,
+          "mean_cjtp": 69.646422,
+          "customer_weighted_cjtp": 72.05539
+        },
+        {
+          "month": "2020-03",
+          "record_count": 662,
+          "total_customers": 25356345,
+          "mean_cjtp": 69.516192,
+          "customer_weighted_cjtp": 71.327416
+        },
+        {
+          "month": "2020-09",
+          "record_count": 659,
+          "total_customers": 25584231,
+          "mean_cjtp": 76.722753,
+          "customer_weighted_cjtp": 76.3893
+        },
+        {
+          "month": "2020-10",
+          "record_count": 659,
+          "total_customers": 26944329,
+          "mean_cjtp": 77.175002,
+          "customer_weighted_cjtp": 77.430665
+        },
+        {
+          "month": "2020-11",
+          "record_count": 659,
+          "total_customers": 24631258,
+          "mean_cjtp": 77.83399,
+          "customer_weighted_cjtp": 77.699306
+        },
+        {
+          "month": "2020-12",
+          "record_count": 659,
+          "total_customers": 26757096,
+          "mean_cjtp": 75.595451,
+          "customer_weighted_cjtp": 74.283065
+        },
+        {
+          "month": "2021-01",
+          "record_count": 659,
+          "total_customers": 23337099,
+          "mean_cjtp": 82.210161,
+          "customer_weighted_cjtp": 80.998418
+        },
+        {
+          "month": "2021-02",
+          "record_count": 659,
+          "total_customers": 23209233,
+          "mean_cjtp": 72.323756,
+          "customer_weighted_cjtp": 70.063636
+        },
+        {
+          "month": "2021-03",
+          "record_count": 662,
+          "total_customers": 29918562,
+          "mean_cjtp": 77.97515,
+          "customer_weighted_cjtp": 77.431171
+        },
+        {
+          "month": "2021-04",
+          "record_count": 662,
+          "total_customers": 28386944,
+          "mean_cjtp": 76.065872,
+          "customer_weighted_cjtp": 76.161213
+        },
+        {
+          "month": "2021-05",
+          "record_count": 652,
+          "total_customers": 28776198,
+          "mean_cjtp": 73.83968,
+          "customer_weighted_cjtp": 74.34016
+        },
+        {
+          "month": "2021-06",
+          "record_count": 654,
+          "total_customers": 31195893,
+          "mean_cjtp": 71.236204,
+          "customer_weighted_cjtp": 71.81537
+        },
+        {
+          "month": "2021-07",
+          "record_count": 653,
+          "total_customers": 29130653,
+          "mean_cjtp": 73.114336,
+          "customer_weighted_cjtp": 72.713483
+        },
+        {
+          "month": "2021-08",
+          "record_count": 653,
+          "total_customers": 30462453,
+          "mean_cjtp": 74.004113,
+          "customer_weighted_cjtp": 72.982523
+        },
+        {
+          "month": "2021-09",
+          "record_count": 654,
+          "total_customers": 27823207,
+          "mean_cjtp": 64.025113,
+          "customer_weighted_cjtp": 66.04408
+        },
+        {
+          "month": "2021-10",
+          "record_count": 655,
+          "total_customers": 28685670,
+          "mean_cjtp": 61.057205,
+          "customer_weighted_cjtp": 64.997091
+        },
+        {
+          "month": "2021-11",
+          "record_count": 662,
+          "total_customers": 30882874,
+          "mean_cjtp": 63.403342,
+          "customer_weighted_cjtp": 67.114787
+        },
+        {
+          "month": "2021-12",
+          "record_count": 662,
+          "total_customers": 43986762,
+          "mean_cjtp": 66.842532,
+          "customer_weighted_cjtp": 68.31856
+        },
+        {
+          "month": "2022-01",
+          "record_count": 662,
+          "total_customers": 39109686,
+          "mean_cjtp": 70.466651,
+          "customer_weighted_cjtp": 70.433665
+        },
+        {
+          "month": "2022-02",
+          "record_count": 662,
+          "total_customers": 37829260,
+          "mean_cjtp": 67.352036,
+          "customer_weighted_cjtp": 69.600417
+        },
+        {
+          "month": "2022-03",
+          "record_count": 662,
+          "total_customers": 45152322,
+          "mean_cjtp": 68.053382,
+          "customer_weighted_cjtp": 70.446551
+        },
+        {
+          "month": "2022-04",
+          "record_count": 662,
+          "total_customers": 40973516,
+          "mean_cjtp": 69.245015,
+          "customer_weighted_cjtp": 71.982024
+        },
+        {
+          "month": "2022-05",
+          "record_count": 662,
+          "total_customers": 40584144,
+          "mean_cjtp": 64.274946,
+          "customer_weighted_cjtp": 68.300538
+        },
+        {
+          "month": "2022-06",
+          "record_count": 670,
+          "total_customers": 45069360,
+          "mean_cjtp": 66.653622,
+          "customer_weighted_cjtp": 69.605347
+        },
+        {
+          "month": "2022-07",
+          "record_count": 670,
+          "total_customers": 38871144,
+          "mean_cjtp": 73.583242,
+          "customer_weighted_cjtp": 74.137288
+        },
+        {
+          "month": "2022-08",
+          "record_count": 670,
+          "total_customers": 45097220,
+          "mean_cjtp": 74.220278,
+          "customer_weighted_cjtp": 74.304742
+        },
+        {
+          "month": "2022-09",
+          "record_count": 670,
+          "total_customers": 36541796,
+          "mean_cjtp": 62.189928,
+          "customer_weighted_cjtp": 65.908334
+        },
+        {
+          "month": "2022-10",
+          "record_count": 670,
+          "total_customers": 40910296,
+          "mean_cjtp": 63.821415,
+          "customer_weighted_cjtp": 67.918321
+        },
+        {
+          "month": "2022-11",
+          "record_count": 670,
+          "total_customers": 43797118,
+          "mean_cjtp": 63.059645,
+          "customer_weighted_cjtp": 67.604227
+        },
+        {
+          "month": "2022-12",
+          "record_count": 669,
+          "total_customers": 48067705,
+          "mean_cjtp": 65.454532,
+          "customer_weighted_cjtp": 68.556145
+        },
+        {
+          "month": "2023-01",
+          "record_count": 674,
+          "total_customers": 45872245,
+          "mean_cjtp": 70.762919,
+          "customer_weighted_cjtp": 72.68938
+        },
+        {
+          "month": "2023-02",
+          "record_count": 672,
+          "total_customers": 43496572,
+          "mean_cjtp": 70.919207,
+          "customer_weighted_cjtp": 72.543331
+        },
+        {
+          "month": "2023-03",
+          "record_count": 672,
+          "total_customers": 52514601,
+          "mean_cjtp": 68.775346,
+          "customer_weighted_cjtp": 71.298107
+        },
+        {
+          "month": "2023-04",
+          "record_count": 671,
+          "total_customers": 43300024,
+          "mean_cjtp": 71.304302,
+          "customer_weighted_cjtp": 73.287569
+        },
+        {
+          "month": "2023-05",
+          "record_count": 671,
+          "total_customers": 47019142,
+          "mean_cjtp": 64.193032,
+          "customer_weighted_cjtp": 67.79134
+        },
+        {
+          "month": "2023-06",
+          "record_count": 671,
+          "total_customers": 47204190,
+          "mean_cjtp": 67.720104,
+          "customer_weighted_cjtp": 69.918275
+        },
+        {
+          "month": "2023-07",
+          "record_count": 671,
+          "total_customers": 42336009,
+          "mean_cjtp": 71.053744,
+          "customer_weighted_cjtp": 72.416122
+        },
+        {
+          "month": "2023-08",
+          "record_count": 672,
+          "total_customers": 53958286,
+          "mean_cjtp": 72.581164,
+          "customer_weighted_cjtp": 73.410361
+        },
+        {
+          "month": "2023-09",
+          "record_count": 672,
+          "total_customers": 43844249,
+          "mean_cjtp": 58.189449,
+          "customer_weighted_cjtp": 63.514649
+        },
+        {
+          "month": "2023-10",
+          "record_count": 672,
+          "total_customers": 51396728,
+          "mean_cjtp": 60.451612,
+          "customer_weighted_cjtp": 65.565198
+        },
+        {
+          "month": "2023-11",
+          "record_count": 672,
+          "total_customers": 49633719,
+          "mean_cjtp": 61.326842,
+          "customer_weighted_cjtp": 65.986013
+        },
+        {
+          "month": "2023-12",
+          "record_count": 671,
+          "total_customers": 47077841,
+          "mean_cjtp": 63.39902,
+          "customer_weighted_cjtp": 66.945065
+        },
+        {
+          "month": "2024-01",
+          "record_count": 671,
+          "total_customers": 49538551,
+          "mean_cjtp": 68.276536,
+          "customer_weighted_cjtp": 71.007034
+        },
+        {
+          "month": "2024-02",
+          "record_count": 671,
+          "total_customers": 47125092,
+          "mean_cjtp": 67.326792,
+          "customer_weighted_cjtp": 69.705043
+        },
+        {
+          "month": "2024-03",
+          "record_count": 671,
+          "total_customers": 49643604,
+          "mean_cjtp": 64.535337,
+          "customer_weighted_cjtp": 68.168779
+        },
+        {
+          "month": "2024-04",
+          "record_count": 671,
+          "total_customers": 50747083,
+          "mean_cjtp": 67.544363,
+          "customer_weighted_cjtp": 70.638653
+        },
+        {
+          "month": "2024-05",
+          "record_count": 671,
+          "total_customers": 50145432,
+          "mean_cjtp": 59.284061,
+          "customer_weighted_cjtp": 63.958172
+        },
+        {
+          "month": "2024-06",
+          "record_count": 671,
+          "total_customers": 45449722,
+          "mean_cjtp": 64.18261,
+          "customer_weighted_cjtp": 66.611445
+        },
+        {
+          "month": "2024-07",
+          "record_count": 671,
+          "total_customers": 51978026,
+          "mean_cjtp": 68.477288,
+          "customer_weighted_cjtp": 69.374442
+        },
+        {
+          "month": "2024-08",
+          "record_count": 671,
+          "total_customers": 52167912,
+          "mean_cjtp": 69.228344,
+          "customer_weighted_cjtp": 69.559462
+        },
+        {
+          "month": "2024-09",
+          "record_count": 671,
+          "total_customers": 46485993,
+          "mean_cjtp": 56.664209,
+          "customer_weighted_cjtp": 61.757732
+        },
+        {
+          "month": "2024-10",
+          "record_count": 671,
+          "total_customers": 50757987,
+          "mean_cjtp": 61.007014,
+          "customer_weighted_cjtp": 65.607811
+        },
+        {
+          "month": "2024-11",
+          "record_count": 672,
+          "total_customers": 41796970,
+          "mean_cjtp": 59.627499,
+          "customer_weighted_cjtp": 64.180869
+        },
+        {
+          "month": "2024-12",
+          "record_count": 671,
+          "total_customers": 54219551,
+          "mean_cjtp": 61.455325,
+          "customer_weighted_cjtp": 65.642905
+        },
+        {
+          "month": "2025-01",
+          "record_count": 671,
+          "total_customers": 54698743,
+          "mean_cjtp": 71.444958,
+          "customer_weighted_cjtp": 72.161611
+        },
+        {
+          "month": "2025-02",
+          "record_count": 671,
+          "total_customers": 49426576,
+          "mean_cjtp": 69.095044,
+          "customer_weighted_cjtp": 70.093546
+        },
+        {
+          "month": "2025-03",
+          "record_count": 671,
+          "total_customers": 54368195,
+          "mean_cjtp": 67.633379,
+          "customer_weighted_cjtp": 69.239783
+        },
+        {
+          "month": "2025-04",
+          "record_count": 671,
+          "total_customers": 52812219,
+          "mean_cjtp": 67.810661,
+          "customer_weighted_cjtp": 69.735526
+        },
+        {
+          "month": "2025-05",
+          "record_count": 671,
+          "total_customers": 50484836,
+          "mean_cjtp": 61.248721,
+          "customer_weighted_cjtp": 65.48339
+        },
+        {
+          "month": "2025-06",
+          "record_count": 709,
+          "total_customers": 50176421,
+          "mean_cjtp": 65.783622,
+          "customer_weighted_cjtp": 67.463138
+        },
+        {
+          "month": "2025-07",
+          "record_count": 694,
+          "total_customers": 53280254,
+          "mean_cjtp": 69.421331,
+          "customer_weighted_cjtp": 69.947566
+        },
+        {
+          "month": "2025-08",
+          "record_count": 693,
+          "total_customers": 50094818,
+          "mean_cjtp": 72.318448,
+          "customer_weighted_cjtp": 71.791724
+        },
+        {
+          "month": "2025-09",
+          "record_count": 690,
+          "total_customers": 60958769,
+          "mean_cjtp": 62.444269,
+          "customer_weighted_cjtp": 64.886803
+        },
+        {
+          "month": "2025-10",
+          "record_count": 690,
+          "total_customers": 57188979,
+          "mean_cjtp": 64.894839,
+          "customer_weighted_cjtp": 67.503417
+        },
+        {
+          "month": "2025-11",
+          "record_count": 682,
+          "total_customers": 50785921,
+          "mean_cjtp": 65.44315,
+          "customer_weighted_cjtp": 67.991022
+        },
+        {
+          "month": "2025-12",
+          "record_count": 681,
+          "total_customers": 58366358,
+          "mean_cjtp": 64.581912,
+          "customer_weighted_cjtp": 66.935498
+        },
+        {
+          "month": "2026-01",
+          "record_count": 682,
+          "total_customers": 39104283,
+          "mean_cjtp": 70.821516,
+          "customer_weighted_cjtp": 72.105084
+        },
+        {
+          "month": "2026-02",
+          "record_count": 682,
+          "total_customers": 43844277,
+          "mean_cjtp": 57.245408,
+          "customer_weighted_cjtp": 58.662118
+        },
+        {
+          "month": "2026-03",
+          "record_count": 690,
+          "total_customers": 55490757,
+          "mean_cjtp": 65.49863,
+          "customer_weighted_cjtp": 68.272314
+        },
+        {
+          "month": "2026-04",
+          "record_count": 696,
+          "total_customers": 51489257,
+          "mean_cjtp": 69.641946,
+          "customer_weighted_cjtp": 71.373092
+        },
+        {
+          "month": "2026-05",
+          "record_count": 690,
+          "total_customers": 49775944,
+          "mean_cjtp": 64.42044,
+          "customer_weighted_cjtp": 66.815887
+        },
+        {
+          "month": "2026-06",
+          "record_count": 690,
+          "total_customers": 57086370,
+          "mean_cjtp": 66.322106,
+          "customer_weighted_cjtp": 67.976382
+        }
+      ],
+      "by_year": [
+        {
+          "year": 2017,
+          "record_count": 3232,
+          "distinct_routes": 325,
+          "mean_cjtp": 65.389275,
+          "customer_weighted_cjtp": 70.274586
+        },
+        {
+          "year": 2018,
+          "record_count": 7772,
+          "distinct_routes": 351,
+          "mean_cjtp": 67.264266,
+          "customer_weighted_cjtp": 71.667222
+        },
+        {
+          "year": 2019,
+          "record_count": 7993,
+          "distinct_routes": 333,
+          "mean_cjtp": 65.638676,
+          "customer_weighted_cjtp": 68.607429
+        },
+        {
+          "year": 2020,
+          "record_count": 4622,
+          "distinct_routes": 331,
+          "mean_cjtp": 73.850556,
+          "customer_weighted_cjtp": 74.054057
+        },
+        {
+          "year": 2021,
+          "record_count": 7887,
+          "distinct_routes": 331,
+          "mean_cjtp": 71.345374,
+          "customer_weighted_cjtp": 71.658703
+        },
+        {
+          "year": 2022,
+          "record_count": 7999,
+          "distinct_routes": 335,
+          "mean_cjtp": 67.362227,
+          "customer_weighted_cjtp": 69.925106
+        },
+        {
+          "year": 2023,
+          "record_count": 8061,
+          "distinct_routes": 337,
+          "mean_cjtp": 66.723561,
+          "customer_weighted_cjtp": 69.590923
+        },
+        {
+          "year": 2024,
+          "record_count": 8053,
+          "distinct_routes": 336,
+          "mean_cjtp": 63.966909,
+          "customer_weighted_cjtp": 67.253586
+        },
+        {
+          "year": 2025,
+          "record_count": 8194,
+          "distinct_routes": 356,
+          "mean_cjtp": 66.841025,
+          "customer_weighted_cjtp": 68.54328
+        },
+        {
+          "year": 2026,
+          "record_count": 4130,
+          "distinct_routes": 350,
+          "mean_cjtp": 65.670423,
+          "customer_weighted_cjtp": 67.594374
+        }
+      ],
+      "month_range": {
+        "start": "2017-08-01",
+        "end": "2026-06-01"
+      },
+      "by_period": [
+        {
+          "category": "Off-Peak",
+          "record_count": 33989,
+          "non_null_count": 33988,
+          "mean": 68.643092,
+          "median": 69.881324,
+          "weighted_mean": 69.716629,
+          "total_weight": 2689617149.947921
+        },
+        {
+          "category": "Peak",
+          "record_count": 33954,
+          "non_null_count": 33954,
+          "mean": 65.984154,
+          "median": 68.386761,
+          "weighted_mean": 69.394873,
+          "total_weight": 1899429792.90705
+        }
+      ],
+      "by_trip_type": [
+        {
+          "category": "EXP",
+          "record_count": 15663,
+          "non_null_count": 15663,
+          "mean": 58.435944,
+          "median": 59.626835,
+          "weighted_mean": 58.842904,
+          "total_weight": 117147945.567598
+        },
+        {
+          "category": "LCL/LTD",
+          "record_count": 48333,
+          "non_null_count": 48333,
+          "mean": 69.652279,
+          "median": 70.047685,
+          "weighted_mean": 69.36964,
+          "total_weight": 3882487851.515466
+        },
+        {
+          "category": "SBS",
+          "record_count": 3947,
+          "non_null_count": 3946,
+          "mean": 73.918288,
+          "median": 74.317844,
+          "weighted_mean": 73.12658,
+          "total_weight": 589411145.771905
+        }
+      ],
+      "by_borough": [
+        {
+          "category": "Bronx",
+          "record_count": 11403,
+          "non_null_count": 11403,
+          "mean": 66.452575,
+          "median": 68.57984,
+          "weighted_mean": 68.573124,
+          "total_weight": 1085370383.001189
+        },
+        {
+          "category": "Brooklyn",
+          "record_count": 13402,
+          "non_null_count": 13402,
+          "mean": 65.629714,
+          "median": 67.214087,
+          "weighted_mean": 67.377266,
+          "total_weight": 1181434691.282263
+        },
+        {
+          "category": "Manhattan",
+          "record_count": 8416,
+          "non_null_count": 8416,
+          "mean": 74.721177,
+          "median": 75.082621,
+          "weighted_mean": 75.243277,
+          "total_weight": 761963911.29083
+        },
+        {
+          "category": "Queens",
+          "record_count": 22844,
+          "non_null_count": 22844,
+          "mean": 65.846229,
+          "median": 68.265671,
+          "weighted_mean": 69.340823,
+          "total_weight": 1317406902.023109
+        },
+        {
+          "category": "Staten Island",
+          "record_count": 11877,
+          "non_null_count": 11877,
+          "mean": 67.617625,
+          "median": 69.37143,
+          "weighted_mean": 68.389836,
+          "total_weight": 242871054.186179
+        },
+        {
+          "category": "UNKNOWN",
+          "record_count": 1,
+          "non_null_count": 0,
+          "mean": null,
+          "median": null,
+          "weighted_mean": null,
+          "total_weight": 1.0714
+        }
+      ],
+      "additional_travel_time": {
+        "name": "additional_travel_time",
+        "count": 67943,
+        "missing": 0,
+        "mean": 0.865398,
+        "median": 0.75078,
+        "std": 3.040638,
+        "min": -30.0,
+        "max": 21.456813,
+        "q1": -0.037774,
+        "q3": 1.579963,
+        "iqr": 1.617737,
+        "range": 51.456813,
+        "skew": 0.142364
+      },
+      "additional_bus_stop_time": {
+        "name": "additional_bus_stop_time",
+        "count": 67943,
+        "missing": 0,
+        "mean": 2.854887,
+        "median": 2.419339,
+        "std": 1.903892,
+        "min": -30.0,
+        "max": 89.999999,
+        "q1": 1.756583,
+        "q3": 3.388168,
+        "iqr": 1.631585,
+        "range": 119.999999,
+        "skew": 4.995731
+      },
+      "relationships": {
+        "cjtp_vs_number_of_customers": {
+          "x": "customer_journey_time_performance",
+          "y": "number_of_customers",
+          "n": 67942,
+          "pearson_r": 0.153968,
+          "spearman_rho": 0.137868,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "weak",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        },
+        "cjtp_vs_additional_travel_time": {
+          "x": "customer_journey_time_performance",
+          "y": "additional_travel_time",
+          "n": 67942,
+          "pearson_r": -0.776963,
+          "spearman_rho": -0.780617,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "very strong",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        },
+        "cjtp_vs_additional_bus_stop_time": {
+          "x": "customer_journey_time_performance",
+          "y": "additional_bus_stop_time",
+          "n": 67942,
+          "pearson_r": -0.515281,
+          "spearman_rho": -0.641505,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "strong",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        }
+      },
+      "outliers": {
+        "cjtp": {
+          "method": "Tukey IQR (k=1.5)",
+          "count_evaluated": 67942,
+          "q1": 61.208934,
+          "q3": 76.234567,
+          "iqr": 15.025633,
+          "lower_fence": 38.670484,
+          "upper_fence": 98.773017,
+          "outlier_count": 3145,
+          "lower_outlier_count": 3111,
+          "upper_outlier_count": 34,
+          "outlier_percentage": 4.628948,
+          "examples": [
+            {
+              "value": 0.0,
+              "label": "S81"
+            },
+            {
+              "value": 0.0,
+              "label": "S81"
+            },
+            {
+              "value": 0.0,
+              "label": "S81"
+            },
+            {
+              "value": 0.264007,
+              "label": "S81"
+            },
+            {
+              "value": 0.558199,
+              "label": "S81"
+            },
+            {
+              "value": 0.857897,
+              "label": "S81"
+            },
+            {
+              "value": 1.196059,
+              "label": "S81"
+            },
+            {
+              "value": 2.384713,
+              "label": "QM34"
+            },
+            {
+              "value": 2.801591,
+              "label": "QM34"
+            },
+            {
+              "value": 3.630058,
+              "label": "S86"
+            },
+            {
+              "value": 4.024973,
+              "label": "QM34"
+            },
+            {
+              "value": 4.101848,
+              "label": "QM34"
+            },
+            {
+              "value": 4.155309,
+              "label": "QM34"
+            },
+            {
+              "value": 4.3263,
+              "label": "S86"
+            },
+            {
+              "value": 4.748222,
+              "label": "S81"
+            },
+            {
+              "value": 4.772889,
+              "label": "SIM24"
+            },
+            {
+              "value": 5.965846,
+              "label": "S81"
+            },
+            {
+              "value": 6.166735,
+              "label": "QM34"
+            },
+            {
+              "value": 6.261076,
+              "label": "QM25"
+            },
+            {
+              "value": 6.509434,
+              "label": "SIM23"
+            },
+            {
+              "value": 7.215771,
+              "label": "S81"
+            },
+            {
+              "value": 7.242018,
+              "label": "QM34"
+            },
+            {
+              "value": 7.265659,
+              "label": "S86"
+            },
+            {
+              "value": 7.346136,
+              "label": "S86"
+            },
+            {
+              "value": 7.436965,
+              "label": "QM34"
+            }
+          ],
+          "action": "reported only - not removed"
+        },
+        "additional_travel_time": {
+          "method": "Tukey IQR (k=1.5)",
+          "count_evaluated": 67943,
+          "q1": -0.037774,
+          "q3": 1.579963,
+          "iqr": 1.617737,
+          "lower_fence": -2.46438,
+          "upper_fence": 4.006569,
+          "outlier_count": 9260,
+          "lower_outlier_count": 4041,
+          "upper_outlier_count": 5219,
+          "outlier_percentage": 13.629071,
+          "examples": [
+            {
+              "value": -30.0,
+              "label": "SBS12"
+            },
+            {
+              "value": -27.34023,
+              "label": "SIM26"
+            },
+            {
+              "value": -27.308033,
+              "label": "SIM26"
+            },
+            {
+              "value": -26.97844,
+              "label": "SIM26"
+            },
+            {
+              "value": -26.030339,
+              "label": "SIM26"
+            },
+            {
+              "value": -24.91976,
+              "label": "T323"
+            },
+            {
+              "value": -23.611177,
+              "label": "SIM26"
+            },
+            {
+              "value": -22.305531,
+              "label": "SIM25"
+            },
+            {
+              "value": -22.115866,
+              "label": "SIM26"
+            },
+            {
+              "value": -21.905801,
+              "label": "SIM26"
+            },
+            {
+              "value": -21.764968,
+              "label": "SIM22"
+            },
+            {
+              "value": -21.041818,
+              "label": "SIM8"
+            },
+            {
+              "value": -20.956863,
+              "label": "SIM22"
+            },
+            {
+              "value": -20.711059,
+              "label": "SIM25"
+            },
+            {
+              "value": -20.656427,
+              "label": "SIM22"
+            },
+            {
+              "value": -20.451114,
+              "label": "SIM30"
+            },
+            {
+              "value": -20.433302,
+              "label": "SIM26"
+            },
+            {
+              "value": -20.428972,
+              "label": "SIM26"
+            },
+            {
+              "value": -20.046602,
+              "label": "SIM25"
+            },
+            {
+              "value": -19.961405,
+              "label": "SIM8X"
+            },
+            {
+              "value": -19.953069,
+              "label": "SIM22"
+            },
+            {
+              "value": 21.456813,
+              "label": "BM2"
+            },
+            {
+              "value": -19.795916,
+              "label": "SIM26"
+            },
+            {
+              "value": -19.754186,
+              "label": "SIM25"
+            },
+            {
+              "value": 21.295055,
+              "label": "QM34"
+            }
+          ],
+          "action": "reported only - not removed"
+        },
+        "additional_bus_stop_time": {
+          "method": "Tukey IQR (k=1.5)",
+          "count_evaluated": 67943,
+          "q1": 1.756583,
+          "q3": 3.388168,
+          "iqr": 1.631585,
+          "lower_fence": -0.690795,
+          "upper_fence": 5.835545,
+          "outlier_count": 4083,
+          "lower_outlier_count": 42,
+          "upper_outlier_count": 4041,
+          "outlier_percentage": 6.009449,
+          "examples": [
+            {
+              "value": 89.999999,
+              "label": "T323"
+            },
+            {
+              "value": 63.280513,
+              "label": "T403"
+            },
+            {
+              "value": 48.621685,
+              "label": "S86"
+            },
+            {
+              "value": 47.956454,
+              "label": "S86"
+            },
+            {
+              "value": 43.600404,
+              "label": "S86"
+            },
+            {
+              "value": 40.668416,
+              "label": "S86"
+            },
+            {
+              "value": 36.157824,
+              "label": "S86"
+            },
+            {
+              "value": -30.0,
+              "label": "SBS12"
+            },
+            {
+              "value": 32.801991,
+              "label": "S84"
+            },
+            {
+              "value": 32.550824,
+              "label": "S86"
+            },
+            {
+              "value": 30.986136,
+              "label": "S86"
+            },
+            {
+              "value": 30.550244,
+              "label": "BX41"
+            },
+            {
+              "value": 29.917892,
+              "label": "S81"
+            },
+            {
+              "value": 29.757377,
+              "label": "S86"
+            },
+            {
+              "value": -24.210682,
+              "label": "Q44-SBS"
+            },
+            {
+              "value": -24.175966,
+              "label": "Q44-SBS"
+            },
+            {
+              "value": -24.152819,
+              "label": "Q44-SBS"
+            },
+            {
+              "value": 29.137191,
+              "label": "BX41"
+            },
+            {
+              "value": -23.883715,
+              "label": "Q44-SBS"
+            },
+            {
+              "value": 28.458716,
+              "label": "BX41-SBS"
+            },
+            {
+              "value": 28.220695,
+              "label": "BX41"
+            },
+            {
+              "value": -23.028244,
+              "label": "Q44-SBS"
+            },
+            {
+              "value": -22.896297,
+              "label": "Q44-SBS"
+            },
+            {
+              "value": 27.895189,
+              "label": "BX41"
+            },
+            {
+              "value": 27.754768,
+              "label": "BX41"
+            }
+          ],
+          "action": "reported only - not removed"
+        }
+      },
+      "route_coverage": {
+        "observed_route_count": 393,
+        "project_route_count": 142,
+        "matching_route_count": 120,
+        "coverage_percentage": 84.51,
+        "project_routes_missing_from_dataset": [
+          "B101",
+          "B106",
+          "B111",
+          "B90",
+          "B91",
+          "B91A",
+          "B92",
+          "B93",
+          "B94",
+          "B96",
+          "B98",
+          "B98V",
+          "B99",
+          "BX90",
+          "BX92",
+          "BX95",
+          "BX99",
+          "D90",
+          "D99",
+          "F1",
+          "J90",
+          "J99"
+        ],
+        "dataset_routes_not_in_project_reference": [
+          "M1",
+          "M10",
+          "M100",
+          "M101",
+          "M102",
+          "M103",
+          "M104",
+          "M106",
+          "M11",
+          "M116",
+          "M12",
+          "M125",
+          "M14A",
+          "M14A-SBS",
+          "M14D",
+          "M14D-SBS",
+          "M15",
+          "M15-SBS",
+          "M2",
+          "M20",
+          "M21",
+          "M22",
+          "M23-SBS",
+          "M3",
+          "M31",
+          "M34-SBS",
+          "M34A-SBS",
+          "M35",
+          "M4",
+          "M42",
+          "M5",
+          "M50",
+          "M55",
+          "M57",
+          "M60-SBS",
+          "M66",
+          "M7",
+          "M72",
+          "M79-SBS",
+          "M8",
+          "M86-SBS",
+          "M9",
+          "M96",
+          "M98",
+          "Q1",
+          "Q10",
+          "Q100",
+          "Q101",
+          "Q102",
+          "Q103",
+          "Q104",
+          "Q11",
+          "Q110",
+          "Q111",
+          "Q112",
+          "Q113",
+          "Q114",
+          "Q115",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q15A",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q2",
+          "Q20",
+          "Q20A",
+          "Q20B",
+          "Q21",
+          "Q22",
+          "Q23",
+          "Q24",
+          "Q25",
+          "Q26",
+          "Q27",
+          "Q28",
+          "Q29",
+          "Q3",
+          "Q30",
+          "Q31",
+          "Q32",
+          "Q33",
+          "Q34",
+          "Q35",
+          "Q36",
+          "Q37",
+          "Q38",
+          "Q39",
+          "Q4",
+          "Q40",
+          "Q41",
+          "Q42",
+          "Q43",
+          "Q44-SBS",
+          "Q45",
+          "Q46",
+          "Q47",
+          "Q48",
+          "Q49",
+          "Q5",
+          "Q50",
+          "Q51",
+          "Q52",
+          "Q52-SBS",
+          "Q53",
+          "Q53-SBS",
+          "Q54",
+          "Q55",
+          "Q56",
+          "Q58",
+          "Q59",
+          "Q6",
+          "Q60",
+          "Q61",
+          "Q63",
+          "Q64",
+          "Q65",
+          "Q66",
+          "Q67",
+          "Q69",
+          "Q7",
+          "Q70-SBS",
+          "Q72",
+          "Q74",
+          "Q75",
+          "Q76",
+          "Q77",
+          "Q8",
+          "Q80",
+          "Q82",
+          "Q83",
+          "Q84",
+          "Q85",
+          "Q86",
+          "Q87",
+          "Q88",
+          "Q89",
+          "Q9",
+          "Q90",
+          "Q98",
+          "QM1",
+          "QM10",
+          "QM11",
+          "QM12",
+          "QM15",
+          "QM16",
+          "QM17",
+          "QM18",
+          "QM2",
+          "QM20",
+          "QM21",
+          "QM24",
+          "QM25",
+          "QM3",
+          "QM31",
+          "QM32",
+          "QM34",
+          "QM35",
+          "QM36",
+          "QM4",
+          "QM40",
+          "QM42",
+          "QM44",
+          "QM5",
+          "QM6",
+          "QM63",
+          "QM64",
+          "QM65",
+          "QM68",
+          "QM7",
+          "QM8",
+          "S40",
+          "S42",
+          "S44",
+          "S46",
+          "S48",
+          "S51",
+          "S52",
+          "S53",
+          "S54",
+          "S55",
+          "S56",
+          "S57",
+          "S59",
+          "S61",
+          "S62",
+          "S66",
+          "S74",
+          "S76",
+          "S78",
+          "S79-SBS",
+          "S81",
+          "S84",
+          "S86",
+          "S89",
+          "S90",
+          "S91",
+          "S92",
+          "S93",
+          "S94",
+          "S96",
+          "S98",
+          "SBS12",
+          "SIM1",
+          "SIM10",
+          "SIM11",
+          "SIM15",
+          "SIM1C",
+          "SIM2",
+          "SIM22",
+          "SIM23",
+          "SIM24",
+          "SIM25",
+          "SIM26",
+          "SIM3",
+          "SIM30",
+          "SIM31",
+          "SIM32",
+          "SIM33",
+          "SIM33C",
+          "SIM34",
+          "SIM35",
+          "SIM3C",
+          "SIM4",
+          "SIM4C",
+          "SIM4X",
+          "SIM5",
+          "SIM5X",
+          "SIM6",
+          "SIM6X",
+          "SIM7",
+          "SIM8",
+          "SIM8X",
+          "SIM9",
+          "T117",
+          "T323",
+          "T403",
+          "T430",
+          "T464",
+          "X1",
+          "X10",
+          "X10B",
+          "X11",
+          "X12",
+          "X14",
+          "X15",
+          "X17",
+          "X17A",
+          "X17J",
+          "X19",
+          "X2",
+          "X21",
+          "X22",
+          "X22A",
+          "X27",
+          "X28",
+          "X3",
+          "X30",
+          "X31",
+          "X37",
+          "X38",
+          "X4",
+          "X42",
+          "X5",
+          "X63",
+          "X64",
+          "X68",
+          "X7",
+          "X8",
+          "X9"
+        ]
+      }
+    },
+    "bus_stops": {
+      "dataset": "bus_stops_clean.parquet (+ route_stop_relationships)",
+      "physical_stop_inventory": {
+        "unique_physical_stops": 6281,
+        "total_route_stop_associations": 8664,
+        "note": "a physical stop can serve several routes/directions, so associations (route x direction x stop rows) exceed the count of distinct physical stops"
+      },
+      "stops_by_route": {
+        "route_count_with_stops": 129,
+        "unique_stops_per_route": {
+          "name": "unique_stops_per_route",
+          "count": 129,
+          "missing": 0,
+          "mean": 66.976744,
+          "median": 65.0,
+          "std": 33.989535,
+          "min": 6.0,
+          "max": 155.0,
+          "q1": 41.0,
+          "q3": 90.0,
+          "iqr": 49.0,
+          "range": 149.0,
+          "skew": 0.296122
+        },
+        "associations_per_route": {
+          "name": "associations_per_route",
+          "count": 129,
+          "missing": 0,
+          "mean": 67.162791,
+          "median": 65.0,
+          "std": 34.109381,
+          "min": 6.0,
+          "max": 155.0,
+          "q1": 41.0,
+          "q3": 92.0,
+          "iqr": 51.0,
+          "range": 149.0,
+          "skew": 0.284559
+        },
+        "highest_stop_coverage": [
+          {
+            "label": "B6",
+            "value": 155.0,
+            "associations": 155.0
+          },
+          {
+            "label": "B8",
+            "value": 151.0,
+            "associations": 151.0
+          },
+          {
+            "label": "B15",
+            "value": 143.0,
+            "associations": 143.0
+          },
+          {
+            "label": "B82",
+            "value": 143.0,
+            "associations": 143.0
+          },
+          {
+            "label": "B44",
+            "value": 137.0,
+            "associations": 137.0
+          },
+          {
+            "label": "B60",
+            "value": 134.0,
+            "associations": 134.0
+          },
+          {
+            "label": "B49",
+            "value": 131.0,
+            "associations": 131.0
+          },
+          {
+            "label": "B4",
+            "value": 128.0,
+            "associations": 128.0
+          },
+          {
+            "label": "B16",
+            "value": 118.0,
+            "associations": 118.0
+          },
+          {
+            "label": "B13",
+            "value": 114.0,
+            "associations": 115.0
+          }
+        ],
+        "lowest_stop_coverage": [
+          {
+            "label": "B106",
+            "value": 6.0,
+            "associations": 6.0
+          },
+          {
+            "label": "B39",
+            "value": 7.0,
+            "associations": 7.0
+          },
+          {
+            "label": "BX95",
+            "value": 8.0,
+            "associations": 8.0
+          },
+          {
+            "label": "BX92",
+            "value": 8.0,
+            "associations": 8.0
+          },
+          {
+            "label": "B94",
+            "value": 11.0,
+            "associations": 11.0
+          },
+          {
+            "label": "B93",
+            "value": 12.0,
+            "associations": 12.0
+          },
+          {
+            "label": "B111",
+            "value": 12.0,
+            "associations": 12.0
+          },
+          {
+            "label": "B99",
+            "value": 16.0,
+            "associations": 16.0
+          },
+          {
+            "label": "J90",
+            "value": 18.0,
+            "associations": 18.0
+          },
+          {
+            "label": "B96",
+            "value": 18.0,
+            "associations": 18.0
+          }
+        ]
+      },
+      "stops_by_direction": [
+        {
+          "direction": "E",
+          "associations": 1968,
+          "unique_stops": 1546,
+          "distinct_routes": 55
+        },
+        {
+          "direction": "N",
+          "associations": 2387,
+          "unique_stops": 2004,
+          "distinct_routes": 72
+        },
+        {
+          "direction": "S",
+          "associations": 2350,
+          "unique_stops": 1931,
+          "distinct_routes": 72
+        },
+        {
+          "direction": "W",
+          "associations": 1959,
+          "unique_stops": 1533,
+          "distinct_routes": 56
+        }
+      ],
+      "stops_by_direction_id": [
+        {
+          "direction_id": 0,
+          "associations": 4355,
+          "unique_stops": 3412
+        },
+        {
+          "direction_id": 1,
+          "associations": 4309,
+          "unique_stops": 3334
+        }
+      ],
+      "association_flags": {
+        "associations_with_ridership_data": 8646,
+        "associations_with_route_geometry": 8664,
+        "associations_on_project_routes": 8664,
+        "routes_flagged_project": 129
+      },
+      "routes_missing_stop_associations": {
+        "count": 13,
+        "route_ids": [
+          "B101",
+          "B91",
+          "B91A",
+          "B92",
+          "B98",
+          "B98V",
+          "BX18",
+          "BX90",
+          "BX99",
+          "D90",
+          "D99",
+          "F1",
+          "J99"
+        ]
+      },
+      "route_coverage": {
+        "observed_route_count": 129,
+        "project_route_count": 142,
+        "matching_route_count": 129,
+        "coverage_percentage": 90.85,
+        "project_routes_missing_from_dataset": [
+          "B101",
+          "B91",
+          "B91A",
+          "B92",
+          "B98",
+          "B98V",
+          "BX18",
+          "BX90",
+          "BX99",
+          "D90",
+          "D99",
+          "F1",
+          "J99"
+        ],
+        "dataset_routes_not_in_project_reference": []
+      }
+    },
+    "routes": {
+      "dataset": "routes_clean.geojson (metadata only; never parsed)",
+      "geometry_summary": {
+        "feature_count": 206338,
+        "unique_route_id_values": 427,
+        "unique_route_short_name_values": 427,
+        "geometry_type": "MultiLineString",
+        "crs": "urn:ogc:def:crs:OGC:1.3:CRS84",
+        "output_size_bytes": 2381732570,
+        "output_size_gb": 2.218161,
+        "reader": "filesystem hard link (no geometry parsing; metadata from authoritative report)",
+        "geometry_parsed": false,
+        "source": "processing_report.json (authoritative Phase 2/3 metadata; file not re-scanned)"
+      },
+      "geometry_characteristics": {
+        "computed": false,
+        "reason": "per-feature geometry metrics (shape_length, vertex counts, bounding boxes) require a full parse of the 2.3 GB GeoJSON; skipped by design (Phase 3 reuses the file via a filesystem hard link and never decodes geometry)",
+        "available_in_source_properties": [
+          "shape_length",
+          "vertices",
+          "min_longitude",
+          "min_latitude",
+          "max_longitude",
+          "max_latitude"
+        ],
+        "recommendation": "if geometry metrics become necessary later, extract them with a bounded streaming reader over selected features rather than a whole-file load"
+      },
+      "project_route_coverage": {
+        "project_route_count": 142,
+        "routes_with_geometry": 142,
+        "coverage_percentage": 100.0,
+        "project_routes_missing_geometry": []
+      },
+      "route_aliases": {
+        "count": 21,
+        "pairs": [
+          {
+            "from": "B44+",
+            "to": "B44-SBS"
+          },
+          {
+            "from": "B46+",
+            "to": "B46-SBS"
+          },
+          {
+            "from": "B82+",
+            "to": "B82-SBS"
+          },
+          {
+            "from": "BX12+",
+            "to": "BX12-SBS"
+          },
+          {
+            "from": "BX41+",
+            "to": "BX41-SBS"
+          },
+          {
+            "from": "BX6+",
+            "to": "BX6-SBS"
+          },
+          {
+            "from": "L1227",
+            "to": "BJ-MW"
+          },
+          {
+            "from": "M14A+",
+            "to": "M14A-SBS"
+          },
+          {
+            "from": "M14D+",
+            "to": "M14D-SBS"
+          },
+          {
+            "from": "M15+",
+            "to": "M15-SBS"
+          },
+          {
+            "from": "M23+",
+            "to": "M23-SBS"
+          },
+          {
+            "from": "M34+",
+            "to": "M34-SBS"
+          },
+          {
+            "from": "M34A+",
+            "to": "M34A-SBS"
+          },
+          {
+            "from": "M60+",
+            "to": "M60-SBS"
+          },
+          {
+            "from": "M79+",
+            "to": "M79-SBS"
+          },
+          {
+            "from": "M86+",
+            "to": "M86-SBS"
+          },
+          {
+            "from": "Q44+",
+            "to": "Q44-SBS"
+          },
+          {
+            "from": "Q52+",
+            "to": "Q52-SBS"
+          },
+          {
+            "from": "Q53+",
+            "to": "Q53-SBS"
+          },
+          {
+            "from": "Q70+",
+            "to": "Q70-SBS"
+          },
+          {
+            "from": "S79+",
+            "to": "S79-SBS"
+          }
+        ],
+        "note": "aliases were canonicalized during Phase 3 (e.g. B44+ -> B44-SBS)"
+      },
+      "service_categories": {
+        "basis": "derived from route-id naming convention (heuristic) - NOT the geometry route_type property",
+        "by_service_type": [
+          {
+            "category": "Express / Commuter",
+            "route_count": 16
+          },
+          {
+            "category": "Local / Limited",
+            "route_count": 120
+          },
+          {
+            "category": "Select Bus Service (SBS)",
+            "route_count": 6
+          }
+        ],
+        "by_borough_prefix": [
+          {
+            "borough": "Bronx",
+            "route_count": 62
+          },
+          {
+            "borough": "Brooklyn",
+            "route_count": 70
+          },
+          {
+            "borough": "Brooklyn (express)",
+            "route_count": 5
+          },
+          {
+            "borough": "Other",
+            "route_count": 5
+          }
+        ]
+      }
+    },
+    "cross_dataset": {
+      "description": "route-level associations across datasets; all figures are association only and do not imply causation",
+      "route_frame_row_count": 414,
+      "relationships": {
+        "ridership_vs_stops": {
+          "x": "unique_stops_per_route",
+          "y": "total_ridership_per_route",
+          "n": 128,
+          "pearson_r": 0.584246,
+          "spearman_rho": 0.620392,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "strong",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        },
+        "ridership_vs_cjtp": {
+          "x": "customer_weighted_cjtp",
+          "y": "total_ridership_per_route",
+          "n": 120,
+          "pearson_r": 0.284341,
+          "spearman_rho": 0.314137,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "weak",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        },
+        "stops_vs_cjtp": {
+          "x": "unique_stops_per_route",
+          "y": "customer_weighted_cjtp",
+          "n": 119,
+          "pearson_r": -0.006164,
+          "spearman_rho": -0.005972,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "negligible",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        },
+        "cjtp_vs_additional_travel_time": {
+          "x": "mean_additional_travel_time",
+          "y": "customer_weighted_cjtp",
+          "n": 392,
+          "pearson_r": -0.606675,
+          "spearman_rho": -0.650174,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "strong",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        },
+        "cjtp_vs_additional_bus_stop_time": {
+          "x": "mean_additional_bus_stop_time",
+          "y": "customer_weighted_cjtp",
+          "n": 392,
+          "pearson_r": -0.218683,
+          "spearman_rho": -0.635332,
+          "pearson_p_value": null,
+          "spearman_p_value": null,
+          "strength": "weak",
+          "note": "association only; correlation does not imply causation",
+          "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)"
+        }
+      },
+      "coverage_overlap": {
+        "project_route_count": 142,
+        "in_ridership": 140,
+        "in_stops": 129,
+        "in_cjtp": 120,
+        "in_all_three_datasets": 119,
+        "in_all_three_pct": 83.802817,
+        "missing_from_every_dataset": [
+          "J99"
+        ],
+        "missing_from_ridership": [
+          "J90",
+          "J99"
+        ],
+        "missing_from_stops": [
+          "B101",
+          "B91",
+          "B91A",
+          "B92",
+          "B98",
+          "B98V",
+          "BX18",
+          "BX90",
+          "BX99",
+          "D90",
+          "D99",
+          "F1",
+          "J99"
+        ],
+        "missing_from_cjtp": [
+          "B101",
+          "B106",
+          "B111",
+          "B90",
+          "B91",
+          "B91A",
+          "B92",
+          "B93",
+          "B94",
+          "B96",
+          "B98",
+          "B98V",
+          "B99",
+          "BX90",
+          "BX92",
+          "BX95",
+          "BX99",
+          "D90",
+          "D99",
+          "F1",
+          "J90",
+          "J99"
+        ]
+      }
+    }
+  },
+  "descriptive_statistics": {
+    "ridership_per_record": {
+      "name": "ridership_per_record",
+      "count": 200000,
+      "missing": 0,
+      "mean": 6.03916,
+      "median": 0.0,
+      "std": 20.487678,
+      "min": 0.0,
+      "max": 438.0,
+      "q1": 0.0,
+      "q3": 0.0,
+      "iqr": 0.0,
+      "range": 438.0,
+      "skew": 5.999764
+    },
+    "total_ridership_per_route": {
+      "name": "total_ridership_per_route",
+      "count": 140,
+      "missing": 0,
+      "mean": 8627.371429,
+      "median": 5941.0,
+      "std": 8965.198807,
+      "min": 0.0,
+      "max": 44390.0,
+      "q1": 701.0,
+      "q3": 12975.0,
+      "iqr": 12274.0,
+      "range": 44390.0,
+      "skew": 1.223331
+    },
+    "daily_total_ridership": {
+      "name": "total_ridership_per_day",
+      "count": 59,
+      "missing": 0,
+      "mean": 20471.728814,
+      "median": 22876.0,
+      "std": 6168.800045,
+      "min": 8931.0,
+      "max": 31720.0,
+      "q1": 14088.0,
+      "q3": 24772.5,
+      "iqr": 10684.5,
+      "range": 22789.0,
+      "skew": -0.311121
+    },
+    "cjtp_overall": {
+      "name": "customer_journey_time_performance_pct",
+      "count": 67942,
+      "missing": 1,
+      "mean": 67.314288,
+      "median": 69.164977,
+      "std": 13.691494,
+      "min": 0.0,
+      "max": 100.0,
+      "q1": 61.208934,
+      "q3": 76.234567,
+      "iqr": 15.025633,
+      "range": 100.0,
+      "skew": -1.098618,
+      "unit": "percent (0-100; higher = more on-time)",
+      "record_count": 67943,
+      "customer_weighted_mean": 69.583452
+    },
+    "additional_travel_time": {
+      "name": "additional_travel_time",
+      "count": 67943,
+      "missing": 0,
+      "mean": 0.865398,
+      "median": 0.75078,
+      "std": 3.040638,
+      "min": -30.0,
+      "max": 21.456813,
+      "q1": -0.037774,
+      "q3": 1.579963,
+      "iqr": 1.617737,
+      "range": 51.456813,
+      "skew": 0.142364
+    },
+    "additional_bus_stop_time": {
+      "name": "additional_bus_stop_time",
+      "count": 67943,
+      "missing": 0,
+      "mean": 2.854887,
+      "median": 2.419339,
+      "std": 1.903892,
+      "min": -30.0,
+      "max": 89.999999,
+      "q1": 1.756583,
+      "q3": 3.388168,
+      "iqr": 1.631585,
+      "range": 119.999999,
+      "skew": 4.995731
+    },
+    "unique_stops_per_route": {
+      "name": "unique_stops_per_route",
+      "count": 129,
+      "missing": 0,
+      "mean": 66.976744,
+      "median": 65.0,
+      "std": 33.989535,
+      "min": 6.0,
+      "max": 155.0,
+      "q1": 41.0,
+      "q3": 90.0,
+      "iqr": 49.0,
+      "range": 149.0,
+      "skew": 0.296122
+    }
+  },
+  "major_findings": [
+    "Ridership dev subsample: 1,207,832 total rides across 200,000 records, 140 routes and 59 dates (2023-01-01 to 2023-02-28).",
+    "Ridership is concentrated: the top 10 routes account for 24.6781% of total ridership (coefficient of variation 1.039158).",
+    "Mean daily ridership is higher on weekdays (23,717.047619) than weekends (12,453.882353).",
+    "CJTP (customer-weighted) averages 69.583452% across 67,943 records spanning 2017-08-01 to 2026-06-01.",
+    "Peak CJTP (69.394873%) is lower than Off-Peak (69.716629%), i.e. journeys run less on-time at peak.",
+    "CJTP falls as additional travel time rises (Pearson r = -0.776963, n = 67942; association, not causation).",
+    "Stop network: 6,281 unique physical stops across 8,664 route-stop associations.",
+    "13 project route(s) have no stop associations in the cleaned data (left absent, not fabricated).",
+    "Route geometry: 206,338 features covering 142/142 project routes (100.0%).",
+    "Across project routes, ridership vs stop count shows Pearson r = 0.584246 (n = 128); association only.",
+    "119/142 project routes (83.802817%) appear in all three of ridership, stops and CJTP."
+  ],
+  "outliers_summary": [
+    {
+      "group": "ridership",
+      "metric": "per_route_total_ridership",
+      "method": "Tukey IQR (k=1.5)",
+      "count_evaluated": 140,
+      "outlier_count": 2,
+      "outlier_percentage": 1.428571,
+      "lower_fence": -17710.0,
+      "upper_fence": 31386.0
+    },
+    {
+      "group": "ridership",
+      "metric": "daily_total_ridership",
+      "method": "Tukey IQR (k=1.5)",
+      "count_evaluated": 59,
+      "outlier_count": 0,
+      "outlier_percentage": 0.0,
+      "lower_fence": -1938.75,
+      "upper_fence": 40799.25
+    },
+    {
+      "group": "ridership",
+      "metric": "per_record_ridership",
+      "method": "Tukey IQR (k=1.5)",
+      "count_evaluated": 200000,
+      "outlier_count": 43881,
+      "outlier_percentage": 21.9405,
+      "lower_fence": 0.0,
+      "upper_fence": 0.0
+    },
+    {
+      "group": "cjtp",
+      "metric": "cjtp",
+      "method": "Tukey IQR (k=1.5)",
+      "count_evaluated": 67942,
+      "outlier_count": 3145,
+      "outlier_percentage": 4.628948,
+      "lower_fence": 38.670484,
+      "upper_fence": 98.773017
+    },
+    {
+      "group": "cjtp",
+      "metric": "additional_travel_time",
+      "method": "Tukey IQR (k=1.5)",
+      "count_evaluated": 67943,
+      "outlier_count": 9260,
+      "outlier_percentage": 13.629071,
+      "lower_fence": -2.46438,
+      "upper_fence": 4.006569
+    },
+    {
+      "group": "cjtp",
+      "metric": "additional_bus_stop_time",
+      "method": "Tukey IQR (k=1.5)",
+      "count_evaluated": 67943,
+      "outlier_count": 4083,
+      "outlier_percentage": 6.009449,
+      "lower_fence": -0.690795,
+      "upper_fence": 5.835545
+    }
+  ],
+  "route_coverage": {
+    "project_route_count": 142,
+    "ridership": {
+      "observed_route_count": 140,
+      "project_route_count": 142,
+      "matching_route_count": 140,
+      "coverage_percentage": 98.59,
+      "project_routes_missing_from_dataset": [
+        "J90",
+        "J99"
+      ],
+      "dataset_routes_not_in_project_reference": []
+    },
+    "cjtp": {
+      "observed_route_count": 393,
+      "project_route_count": 142,
+      "matching_route_count": 120,
+      "coverage_percentage": 84.51,
+      "project_routes_missing_from_dataset": [
+        "B101",
+        "B106",
+        "B111",
+        "B90",
+        "B91",
+        "B91A",
+        "B92",
+        "B93",
+        "B94",
+        "B96",
+        "B98",
+        "B98V",
+        "B99",
+        "BX90",
+        "BX92",
+        "BX95",
+        "BX99",
+        "D90",
+        "D99",
+        "F1",
+        "J90",
+        "J99"
+      ],
+      "dataset_routes_not_in_project_reference": [
+        "M1",
+        "M10",
+        "M100",
+        "M101",
+        "M102",
+        "M103",
+        "M104",
+        "M106",
+        "M11",
+        "M116",
+        "M12",
+        "M125",
+        "M14A",
+        "M14A-SBS",
+        "M14D",
+        "M14D-SBS",
+        "M15",
+        "M15-SBS",
+        "M2",
+        "M20",
+        "M21",
+        "M22",
+        "M23-SBS",
+        "M3",
+        "M31",
+        "M34-SBS",
+        "M34A-SBS",
+        "M35",
+        "M4",
+        "M42",
+        "M5",
+        "M50",
+        "M55",
+        "M57",
+        "M60-SBS",
+        "M66",
+        "M7",
+        "M72",
+        "M79-SBS",
+        "M8",
+        "M86-SBS",
+        "M9",
+        "M96",
+        "M98",
+        "Q1",
+        "Q10",
+        "Q100",
+        "Q101",
+        "Q102",
+        "Q103",
+        "Q104",
+        "Q11",
+        "Q110",
+        "Q111",
+        "Q112",
+        "Q113",
+        "Q114",
+        "Q115",
+        "Q12",
+        "Q13",
+        "Q14",
+        "Q15",
+        "Q15A",
+        "Q16",
+        "Q17",
+        "Q18",
+        "Q19",
+        "Q2",
+        "Q20",
+        "Q20A",
+        "Q20B",
+        "Q21",
+        "Q22",
+        "Q23",
+        "Q24",
+        "Q25",
+        "Q26",
+        "Q27",
+        "Q28",
+        "Q29",
+        "Q3",
+        "Q30",
+        "Q31",
+        "Q32",
+        "Q33",
+        "Q34",
+        "Q35",
+        "Q36",
+        "Q37",
+        "Q38",
+        "Q39",
+        "Q4",
+        "Q40",
+        "Q41",
+        "Q42",
+        "Q43",
+        "Q44-SBS",
+        "Q45",
+        "Q46",
+        "Q47",
+        "Q48",
+        "Q49",
+        "Q5",
+        "Q50",
+        "Q51",
+        "Q52",
+        "Q52-SBS",
+        "Q53",
+        "Q53-SBS",
+        "Q54",
+        "Q55",
+        "Q56",
+        "Q58",
+        "Q59",
+        "Q6",
+        "Q60",
+        "Q61",
+        "Q63",
+        "Q64",
+        "Q65",
+        "Q66",
+        "Q67",
+        "Q69",
+        "Q7",
+        "Q70-SBS",
+        "Q72",
+        "Q74",
+        "Q75",
+        "Q76",
+        "Q77",
+        "Q8",
+        "Q80",
+        "Q82",
+        "Q83",
+        "Q84",
+        "Q85",
+        "Q86",
+        "Q87",
+        "Q88",
+        "Q89",
+        "Q9",
+        "Q90",
+        "Q98",
+        "QM1",
+        "QM10",
+        "QM11",
+        "QM12",
+        "QM15",
+        "QM16",
+        "QM17",
+        "QM18",
+        "QM2",
+        "QM20",
+        "QM21",
+        "QM24",
+        "QM25",
+        "QM3",
+        "QM31",
+        "QM32",
+        "QM34",
+        "QM35",
+        "QM36",
+        "QM4",
+        "QM40",
+        "QM42",
+        "QM44",
+        "QM5",
+        "QM6",
+        "QM63",
+        "QM64",
+        "QM65",
+        "QM68",
+        "QM7",
+        "QM8",
+        "S40",
+        "S42",
+        "S44",
+        "S46",
+        "S48",
+        "S51",
+        "S52",
+        "S53",
+        "S54",
+        "S55",
+        "S56",
+        "S57",
+        "S59",
+        "S61",
+        "S62",
+        "S66",
+        "S74",
+        "S76",
+        "S78",
+        "S79-SBS",
+        "S81",
+        "S84",
+        "S86",
+        "S89",
+        "S90",
+        "S91",
+        "S92",
+        "S93",
+        "S94",
+        "S96",
+        "S98",
+        "SBS12",
+        "SIM1",
+        "SIM10",
+        "SIM11",
+        "SIM15",
+        "SIM1C",
+        "SIM2",
+        "SIM22",
+        "SIM23",
+        "SIM24",
+        "SIM25",
+        "SIM26",
+        "SIM3",
+        "SIM30",
+        "SIM31",
+        "SIM32",
+        "SIM33",
+        "SIM33C",
+        "SIM34",
+        "SIM35",
+        "SIM3C",
+        "SIM4",
+        "SIM4C",
+        "SIM4X",
+        "SIM5",
+        "SIM5X",
+        "SIM6",
+        "SIM6X",
+        "SIM7",
+        "SIM8",
+        "SIM8X",
+        "SIM9",
+        "T117",
+        "T323",
+        "T403",
+        "T430",
+        "T464",
+        "X1",
+        "X10",
+        "X10B",
+        "X11",
+        "X12",
+        "X14",
+        "X15",
+        "X17",
+        "X17A",
+        "X17J",
+        "X19",
+        "X2",
+        "X21",
+        "X22",
+        "X22A",
+        "X27",
+        "X28",
+        "X3",
+        "X30",
+        "X31",
+        "X37",
+        "X38",
+        "X4",
+        "X42",
+        "X5",
+        "X63",
+        "X64",
+        "X68",
+        "X7",
+        "X8",
+        "X9"
+      ]
+    },
+    "bus_stops": {
+      "observed_route_count": 129,
+      "project_route_count": 142,
+      "matching_route_count": 129,
+      "coverage_percentage": 90.85,
+      "project_routes_missing_from_dataset": [
+        "B101",
+        "B91",
+        "B91A",
+        "B92",
+        "B98",
+        "B98V",
+        "BX18",
+        "BX90",
+        "BX99",
+        "D90",
+        "D99",
+        "F1",
+        "J99"
+      ],
+      "dataset_routes_not_in_project_reference": []
+    },
+    "routes_geometry": {
+      "project_route_count": 142,
+      "routes_with_geometry": 142,
+      "coverage_percentage": 100.0,
+      "project_routes_missing_geometry": []
+    },
+    "overlap_across_datasets": {
+      "project_route_count": 142,
+      "in_ridership": 140,
+      "in_stops": 129,
+      "in_cjtp": 120,
+      "in_all_three_datasets": 119,
+      "in_all_three_pct": 83.802817,
+      "missing_from_every_dataset": [
+        "J99"
+      ],
+      "missing_from_ridership": [
+        "J90",
+        "J99"
+      ],
+      "missing_from_stops": [
+        "B101",
+        "B91",
+        "B91A",
+        "B92",
+        "B98",
+        "B98V",
+        "BX18",
+        "BX90",
+        "BX99",
+        "D90",
+        "D99",
+        "F1",
+        "J99"
+      ],
+      "missing_from_cjtp": [
+        "B101",
+        "B106",
+        "B111",
+        "B90",
+        "B91",
+        "B91A",
+        "B92",
+        "B93",
+        "B94",
+        "B96",
+        "B98",
+        "B98V",
+        "B99",
+        "BX90",
+        "BX92",
+        "BX95",
+        "BX99",
+        "D90",
+        "D99",
+        "F1",
+        "J90",
+        "J99"
+      ]
+    }
+  },
+  "important_correlations": [
+    {
+      "x": "customer_journey_time_performance",
+      "y": "number_of_customers",
+      "n": 67942,
+      "pearson_r": 0.153968,
+      "spearman_rho": 0.137868,
+      "pearson_p_value": null,
+      "spearman_p_value": null,
+      "strength": "weak",
+      "note": "association only; correlation does not imply causation",
+      "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)",
+      "relationship": "cjtp_vs_number_of_customers"
+    },
+    {
+      "x": "customer_journey_time_performance",
+      "y": "additional_travel_time",
+      "n": 67942,
+      "pearson_r": -0.776963,
+      "spearman_rho": -0.780617,
+      "pearson_p_value": null,
+      "spearman_p_value": null,
+      "strength": "very strong",
+      "note": "association only; correlation does not imply causation",
+      "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)",
+      "relationship": "cjtp_vs_additional_travel_time"
+    },
+    {
+      "x": "customer_journey_time_performance",
+      "y": "additional_bus_stop_time",
+      "n": 67942,
+      "pearson_r": -0.515281,
+      "spearman_rho": -0.641505,
+      "pearson_p_value": null,
+      "spearman_p_value": null,
+      "strength": "strong",
+      "note": "association only; correlation does not imply causation",
+      "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)",
+      "relationship": "cjtp_vs_additional_bus_stop_time"
+    },
+    {
+      "x": "unique_stops_per_route",
+      "y": "total_ridership_per_route",
+      "n": 128,
+      "pearson_r": 0.584246,
+      "spearman_rho": 0.620392,
+      "pearson_p_value": null,
+      "spearman_p_value": null,
+      "strength": "strong",
+      "note": "association only; correlation does not imply causation",
+      "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)",
+      "relationship": "ridership_vs_stops"
+    },
+    {
+      "x": "customer_weighted_cjtp",
+      "y": "total_ridership_per_route",
+      "n": 120,
+      "pearson_r": 0.284341,
+      "spearman_rho": 0.314137,
+      "pearson_p_value": null,
+      "spearman_p_value": null,
+      "strength": "weak",
+      "note": "association only; correlation does not imply causation",
+      "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)",
+      "relationship": "ridership_vs_cjtp"
+    },
+    {
+      "x": "unique_stops_per_route",
+      "y": "customer_weighted_cjtp",
+      "n": 119,
+      "pearson_r": -0.006164,
+      "spearman_rho": -0.005972,
+      "pearson_p_value": null,
+      "spearman_p_value": null,
+      "strength": "negligible",
+      "note": "association only; correlation does not imply causation",
+      "p_value_note": "scipy not installed; p-values omitted (n reported so significance can be judged)",
+      "relationship": "stops_vs_cjtp"
+    }
+  ],
+  "figures": [
+    {
+      "filename": "ridership_by_route.png",
+      "created": true,
+      "size_bytes": 35874
+    },
+    {
+      "filename": "ridership_daily.png",
+      "created": true,
+      "size_bytes": 99430
+    },
+    {
+      "filename": "ridership_distribution.png",
+      "created": true,
+      "size_bytes": 30672
+    },
+    {
+      "filename": "cjtp_distribution.png",
+      "created": true,
+      "size_bytes": 29615
+    },
+    {
+      "filename": "cjtp_by_period.png",
+      "created": true,
+      "size_bytes": 26996
+    },
+    {
+      "filename": "cjtp_by_trip_type.png",
+      "created": true,
+      "size_bytes": 29571
+    },
+    {
+      "filename": "cjtp_top_bottom_routes.png",
+      "created": true,
+      "size_bytes": 49759
+    },
+    {
+      "filename": "stops_by_route.png",
+      "created": true,
+      "size_bytes": 34000
+    },
+    {
+      "filename": "ridership_vs_stops.png",
+      "created": true,
+      "size_bytes": 41101
+    },
+    {
+      "filename": "ridership_vs_cjtp.png",
+      "created": true,
+      "size_bytes": 39876
+    }
+  ],
+  "limitations": [
+    "The processed ridership extract (mta_ridership_dev.parquet) is a development subsample: 200,000 records spanning only 2023-01-01 to 2023-02-28 (59 distinct service dates) with timestamps bucketed to 12 even hours (0,2,...,22). It does NOT support meaningful 24-hour / diurnal ridership pattern claims; hourly totals are reported descriptively only, and no continuous hourly-profile figure is drawn.",
+    "No 24-hour / diurnal ridership pattern is claimed; hourly totals are descriptive only (12 even-hour buckets).",
+    "Ridership covers 140/142 project routes; absent routes (J90, J99) carry no fabricated rows.",
+    "CJTP covers 120/142 project routes and has 1 missing CJTP value(s), excluded (not imputed).",
+    "Bus-stop associations cover 129/142 project routes.",
+    "Route geometry is analyzed from processing_report.json metadata only; the 2.3 GB GeoJSON is not parsed, so per-feature geometry characteristics (length, vertices, bbox) are not computed.",
+    "CJTP spans monthly aggregates 2017-2026 while ridership is a Jan-Feb 2023 subsample; the route-level ridership-vs-CJTP association therefore compares different time windows.",
+    "All correlations are measures of association and do not imply causation.",
+    "scipy is not installed, so correlation p-values are omitted; each correlation reports its sample size n so significance can still be judged."
+  ],
+  "source_datasets_used": [
+    {
+      "name": "ridership_clean",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\ridership_clean.parquet",
+      "row_count": 200000
+    },
+    {
+      "name": "bus_stops_clean",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\bus_stops_clean.parquet",
+      "row_count": 8664
+    },
+    {
+      "name": "customer_journey_clean",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\customer_journey_clean.parquet",
+      "row_count": 67943
+    },
+    {
+      "name": "ridership_by_route",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\ridership_by_route.parquet",
+      "row_count": 140
+    },
+    {
+      "name": "ridership_by_date",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\ridership_by_date.parquet",
+      "row_count": 59
+    },
+    {
+      "name": "ridership_by_hour",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\ridership_by_hour.parquet",
+      "row_count": 12
+    },
+    {
+      "name": "cjtp_by_route",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\cjtp_by_route.parquet",
+      "row_count": 393
+    },
+    {
+      "name": "route_stop_relationships",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\route_stop_relationships.parquet",
+      "row_count": 8664
+    },
+    {
+      "name": "routes_clean.geojson",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\routes_clean.geojson",
+      "usage": "metadata only (feature count/CRS/coverage from processing_report.json); not parsed"
+    },
+    {
+      "name": "processing_report.json",
+      "path": "C:\\Users\\aksha\\Downloads\\datahandling capstone\\public-transit-dashboard\\data\\processed\\processing_report.json",
+      "usage": "route geometry metadata + reconciliation"
+    }
+  ],
+  "validation": {
+    "total_checks": 6,
+    "passed": 6,
+    "failed": 0,
+    "all_passed": true,
+    "checks": [
+      {
+        "check": "processed_inputs_unmodified",
+        "passed": true,
+        "detail": "all inputs match pre-run fingerprints"
+      },
+      {
+        "check": "all_figures_rendered",
+        "passed": true,
+        "detail": "10/10 figures created"
+      },
+      {
+        "check": "ridership_total_matches_processing_report",
+        "passed": true,
+        "detail": "EDA total=1,207,832; report total=1207832.0"
+      },
+      {
+        "check": "ridership_clean_reconciles_with_by_route",
+        "passed": true,
+        "detail": "clean ridership sum equals ridership_by_route sum"
+      },
+      {
+        "check": "route_coverage_not_inflated",
+        "passed": true,
+        "detail": "coverage within project bounds"
+      },
+      {
+        "check": "routes_geometry_not_parsed",
+        "passed": true,
+        "detail": "route metadata sourced from processing_report.json; 2.3 GB GeoJSON not parsed"
+      }
+    ],
+    "fingerprints_after": {
+      "ridership_clean.parquet": {
+        "path": "ridership_clean.parquet",
+        "size_bytes": 204155,
+        "modified_time_ns": 1787591141740799800,
+        "sha256": "76aa463cd0dba3df3ccf2cafbf6ce4a8952ba401e3415c25ef2671d44a5d32c2"
+      },
+      "bus_stops_clean.parquet": {
+        "path": "bus_stops_clean.parquet",
+        "size_bytes": 377957,
+        "modified_time_ns": 1787591141907772000,
+        "sha256": "9f7dcb1527f156643142061aac14056fa31af9505c6bf6e5a06e44efd02afe8a"
+      },
+      "customer_journey_clean.parquet": {
+        "path": "customer_journey_clean.parquet",
+        "size_bytes": 3443342,
+        "modified_time_ns": 1787591142433528500,
+        "sha256": "b398eb02e3ccad77578e3d647bd1b8e48381cd28645302e77e87c67a24b66a96"
+      },
+      "ridership_by_route.parquet": {
+        "path": "ridership_by_route.parquet",
+        "size_bytes": 15086,
+        "modified_time_ns": 1787591142541038700,
+        "sha256": "407b5dba78b6c1deb3fe7de3dd7cf92079948ed0b5fefec8dbecbff20a7da005"
+      },
+      "ridership_by_date.parquet": {
+        "path": "ridership_by_date.parquet",
+        "size_bytes": 5878,
+        "modified_time_ns": 1787591142592167700,
+        "sha256": "8aaaf063526dd413f246a6f3465a6b60f64d0b83d74df4e7c93e55d8f48d9a79"
+      },
+      "ridership_by_hour.parquet": {
+        "path": "ridership_by_hour.parquet",
+        "size_bytes": 5313,
+        "modified_time_ns": 1787591142695907400,
+        "sha256": "45cc5ea993de8abf6ace93f7b7898c7648618748c93ac4b0fbc02eaf97e5a0d2"
+      },
+      "cjtp_by_route.parquet": {
+        "path": "cjtp_by_route.parquet",
+        "size_bytes": 65538,
+        "modified_time_ns": 1787591144625783000,
+        "sha256": "6f31f4166341c768eedbbf94fffd45f9aa0c67533e948845031457e3bcaf0b09"
+      },
+      "route_stop_relationships.parquet": {
+        "path": "route_stop_relationships.parquet",
+        "size_bytes": 244691,
+        "modified_time_ns": 1787591144712973700,
+        "sha256": "f38bb9c58f42ca04c85a78f319b6b197a993253f1dac1e4ceb832b21f2d66456"
+      },
+      "routes_clean.geojson": {
+        "path": "routes_clean.geojson",
+        "size_bytes": 2381732570,
+        "modified_time_ns": 1787507946861714400,
+        "sha256": null
+      },
+      "processing_report.json": {
+        "path": "processing_report.json",
+        "size_bytes": 43364,
+        "modified_time_ns": 1787591145774822200,
+        "sha256": "99ea2dede1f86d31e0310dbd30348f7c0d0e1ae78864c08b807bd4a6642a85b2"
+      },
+      "dataset_profiling_report.json": {
+        "path": "dataset_profiling_report.json",
+        "size_bytes": 46306,
+        "modified_time_ns": 1787510861832543500,
+        "sha256": "25dbac8484f6db5fef11e122154c83ec5885d067d116b4e497a385e65d93286d"
+      },
+      "mta_bus_routes_valid_report.json": {
+        "path": "mta_bus_routes_valid_report.json",
+        "size_bytes": 2938,
+        "modified_time_ns": 1787508167128185800,
+        "sha256": "22fbd842cf77569c3aa4be7104d4193564bdc827dd42ff6d96b72b7a9e53cd69"
+      }
+    }
+  }
+}

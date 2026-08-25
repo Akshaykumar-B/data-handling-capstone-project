@@ -1,0 +1,39 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Local secrets and tooling files
+.env
+.env.*
+!.env.example
+.vscode/
+
+# Raw and processed datasets
+/data/raw/**
+/data/processed/**
+
+# Keep small project reports and visual EDA outputs
+!/data/raw/*_report.json
+!/data/raw/*_ingestion_summary.json
+!/data/processed/dataset_profiling_report.json
+!/data/processed/eda_report.json
+!/data/processed/processing_report.json
+!/data/processed/eda/
+!/data/processed/eda/*.png
+
+# Dashboard and build outputs
+node_modules/
+dist/
+build/
+.next/
+coverage/
+
+# Temporary files and logs
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
