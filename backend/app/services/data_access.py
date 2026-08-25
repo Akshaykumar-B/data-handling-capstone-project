@@ -1,14 +1,13 @@
-"""Read-only access to the small processed dashboard inputs.
-
-The first scaffold exposes file availability only. Future analytics services can
-add cached JSON/Parquet loaders here without making the frontend access files.
-"""
+"""Cached, read-only access to the Phase 3 and Phase 4 outputs."""
 
 from __future__ import annotations
 
 from pathlib import Path
+import json
+from functools import lru_cache
 from typing import Any
 
+import pandas as pd
 from ..core.config import PROCESSED_DIR
 
 
@@ -27,24 +26,34 @@ REQUIRED_FILES = (
 
 
 class DataStore:
-    """Central read-only boundary for processed data."""
+    """Central repository for reports and dashboard-sized Parquet tables."""
 
     def __init__(self, processed_dir: Path) -> None:
         self.processed_dir = processed_dir
 
+    @lru_cache(maxsize=None)
+    def report(self, name: str) -> dict[str, Any]:
+        with (self.processed_dir / name).open(encoding="utf-8") as handle:
+            return json.load(handle)
+
+    @lru_cache(maxsize=None)
+    def table(self, name: str) -> pd.DataFrame:
+        return pd.read_parquet(self.processed_dir / f"{name}.parquet")
+
+    @property
+    def eda(self) -> dict[str, Any]:
+        return self.report("eda_report.json")
+
+    @property
+    def processing(self) -> dict[str, Any]:
+        return self.report("processing_report.json")
+
+    def coverage(self, dataset: str) -> dict[str, Any]:
+        return self.eda["analyses"][dataset]["route_coverage"]
+
     def status(self) -> dict[str, Any]:
-        files = {
-            name: {
-                "path": f"data/processed/{name}",
-                "exists": (self.processed_dir / name).is_file(),
-            }
-            for name in REQUIRED_FILES
-        }
-        return {
-            "status": "ready" if all(item["exists"] for item in files.values()) else "incomplete",
-            "processed_directory": str(self.processed_dir),
-            "required_files": files,
-        }
+        files = {name: (self.processed_dir / name).is_file() for name in REQUIRED_FILES}
+        return {"status": "ready" if all(files.values()) else "incomplete", "required_files": files}
 
 
 data_store = DataStore(PROCESSED_DIR)
