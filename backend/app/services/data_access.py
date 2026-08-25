@@ -51,6 +51,10 @@ class DataStore:
     def coverage(self, dataset: str) -> dict[str, Any]:
         return self.eda["analyses"][dataset]["route_coverage"]
 
+    def missing_runtime_files(self) -> list[str]:
+        """Return missing inputs without reading or creating any dataset."""
+        return [name for name in REQUIRED_FILES if not (self.processed_dir / name).is_file()]
+
     def status(self) -> dict[str, Any]:
         files = {name: (self.processed_dir / name).is_file() for name in REQUIRED_FILES}
         return {"status": "ready" if all(files.values()) else "incomplete", "required_files": files}
