@@ -15,9 +15,9 @@ export default function OverviewPage() {
   return (
     <div className="flex flex-col gap-10">
       <PageHeader
-        eyebrow="Scaffolded view"
-        title="Overview"
-        description="A starting point for route coverage and performance, assembled from the Phase 3/4 processed data pipeline. Every figure below traces to a specific parquet or JSON output — nothing here is estimated."
+        eyebrow="Overview"
+        title="Route coverage and performance at a glance"
+        description="Assembled from the Phase 3/4 processed data pipeline. Every figure below traces to a specific parquet or JSON output — nothing here is estimated."
       />
 
       <ApiState isLoading={overview.isLoading} error={overview.error} skeletonHeight="h-96">
