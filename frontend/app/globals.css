@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #141719;
+  --paper: #f5f6f7;
+  --rail: #5a6470;
+  --blue: #1b57c4;
+  --line: #d8dde3;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, sans-serif; }
+a { color: inherit; text-decoration: none; }
+.shell { display: flex; min-height: 100vh; }
+.sidebar { width: 250px; flex: 0 0 250px; padding: 28px 18px; background: var(--ink); color: #fff; display: flex; flex-direction: column; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .04em; margin-bottom: 44px; }
+.brand-mark { padding: 5px 7px; background: var(--blue); font-size: 12px; }
+nav { display: grid; gap: 4px; }
+nav a { padding: 12px 10px; color: #c8cdd2; border-left: 3px solid transparent; }
+nav a:hover, nav a.active { color: #fff; background: #252b30; border-left-color: var(--blue); }
+.api-status { margin-top: auto; padding: 12px 10px; color: #c8cdd2; font: 12px monospace; border-top: 1px solid #3a4248; }
+.status-dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; background: var(--blue); border-radius: 50%; }
+.main { width: 100%; max-width: 1400px; padding: 38px clamp(24px, 5vw, 72px); }
+header { border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+.eyebrow { color: var(--rail); font: 11px monospace; letter-spacing: .08em; }
+h1, h2 { margin: 8px 0 0; letter-spacing: 0; }
+h1 { font-size: clamp(26px, 4vw, 42px); }
+.placeholder { max-width: 720px; margin-top: 56px; padding: 32px 0; border-top: 5px solid var(--blue); }
+.placeholder h2 { font-size: 32px; }
+.placeholder p { color: var(--rail); line-height: 1.6; }
+.loading-line { height: 10px; width: min(480px, 100%); margin-top: 36px; background: var(--line); }
+.muted { font-size: 13px; }
+@media (max-width: 700px) { .shell { display: block; } .sidebar { width: 100%; min-height: auto; padding: 18px; } .brand { margin-bottom: 18px; } nav { grid-template-columns: repeat(2, 1fr); } .api-status { margin-top: 18px; } .main { padding: 28px 20px; } }
