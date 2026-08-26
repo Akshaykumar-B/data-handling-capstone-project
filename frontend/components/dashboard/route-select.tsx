@@ -8,9 +8,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { useKnownRoutes } from "@/lib/queries";
 
-export function RouteSelect({ value, onChange }: { value: string | null; onChange: (route: string | null) => void }) {
+export function RouteSelect({ value, onChange, routes: providedRoutes }: { value: string | null; onChange: (route: string | null) => void; routes?: string[] }) {
   const [open, setOpen] = useState(false);
-  const { routes, isLoading } = useKnownRoutes();
+  const { routes: knownRoutes, isLoading } = useKnownRoutes();
+  const routes = providedRoutes ?? knownRoutes;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
