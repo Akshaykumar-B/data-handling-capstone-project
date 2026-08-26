@@ -88,17 +88,18 @@ export function routeConcentration(rows: RidershipByRouteRow[]): ConcentrationRe
   return { points, giniCoefficient, top10SharePct };
 }
 
-export type CorrelationBar = { label: string; pearsonR: number | null; spearmanRho: number | null; strength: string; n: number };
+export type CorrelationBar = { id: string; label: string; pearsonR: number | null; spearmanRho: number | null; strength: string; n: number };
 
 /** Flattens the record-level and route-level correlation maps from /relationships/summary into a single chart dataset. */
 export function correlationDataset(recordLevel: Record<string, CorrelationPair>, routeLevel: Record<string, CorrelationPair>): CorrelationBar[] {
-  const toBars = (source: Record<string, CorrelationPair>) =>
+  const toBars = (source: Record<string, CorrelationPair>, level: string) =>
     Object.entries(source).map(([key, pair]) => ({
+      id: `${level}:${key}`,
       label: key.replace(/_/g, " "),
       pearsonR: pair.pearson_r,
       spearmanRho: pair.spearman_rho,
       strength: pair.strength,
       n: pair.n,
     }));
-  return [...toBars(recordLevel), ...toBars(routeLevel)];
+  return [...toBars(recordLevel, "record"), ...toBars(routeLevel, "route")];
 }

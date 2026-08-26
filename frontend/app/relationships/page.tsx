@@ -51,7 +51,7 @@ export default function RelationshipsPage() {
               <ChartTooltip content={<ChartTooltipContent />} />
               <Bar dataKey="pearsonR" name="Pearson r" radius={[0, 4, 4, 0]}>
                 {bars.map((bar) => (
-                  <Cell key={bar.label} fill={barColor(bar.pearsonR)} />
+                  <Cell key={bar.id} fill={barColor(bar.pearsonR)} />
                 ))}
               </Bar>
             </BarChart>
@@ -62,12 +62,12 @@ export default function RelationshipsPage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <Section title="Record-level pairs" description="Computed across individual observation records.">
           <ApiState isLoading={relationships.isLoading} error={relationships.error} isEmpty={Object.keys(recordLevel).length === 0}>
-            <DataTable columns={barColumns} rows={correlationDataset(recordLevel, {})} getKey={(row) => row.label} />
+            <DataTable columns={barColumns} rows={correlationDataset(recordLevel, {})} getKey={(row) => row.id} />
           </ApiState>
         </Section>
         <Section title="Route-level pairs" description="Computed across route-aggregated totals.">
           <ApiState isLoading={relationships.isLoading} error={relationships.error} isEmpty={Object.keys(routeLevel).length === 0}>
-            <DataTable columns={barColumns} rows={correlationDataset({}, routeLevel)} getKey={(row) => row.label} />
+            <DataTable columns={barColumns} rows={correlationDataset({}, routeLevel)} getKey={(row) => row.id} />
           </ApiState>
         </Section>
       </div>
