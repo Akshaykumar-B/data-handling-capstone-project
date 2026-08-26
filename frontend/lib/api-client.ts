@@ -265,9 +265,16 @@ async function get<T>(path: string, params?: Record<string, string | number | bo
   if (!apiBaseUrl) {
     throw new ApiError("NEXT_PUBLIC_API_BASE_URL is not configured");
   }
+  // Requests are routed through the Next.js same-origin proxy (/api/proxy)
+  // rather than fetched directly from the browser, because the FastAPI
+  // backend does not send Access-Control-Allow-Origin and a direct
+  // cross-origin fetch is blocked by the browser's CORS enforcement. The
+  // proxy forwards the exact same path/query server-side; no request or
+  // response data is altered.
+  const proxiedPath = `/api/proxy${path}`;
   let response: Response;
   try {
-    response = await fetch(`${apiBaseUrl}${path}${toQuery(params)}`, { headers: { Accept: "application/json" } });
+    response = await fetch(`${proxiedPath}${toQuery(params)}`, { headers: { Accept: "application/json" } });
   } catch {
     throw new ApiError("Unable to reach the transit dashboard API");
   }

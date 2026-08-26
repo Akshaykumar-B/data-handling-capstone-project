@@ -9,6 +9,7 @@ import { CoverageNote } from "@/components/dashboard/coverage-note";
 import { CoverageBar } from "@/components/dashboard/coverage-bar";
 import { DataTable } from "@/components/dashboard/data-table";
 import { StopMap } from "@/components/dashboard/stop-map";
+import { RouteExplorer } from "@/components/dashboard/route-explorer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatInt } from "@/lib/format";
 import { useRoutesSummary, useStopsSummary, useStopsRoutes, useStopsPoints } from "@/lib/queries";
@@ -33,6 +34,8 @@ export default function RoutesStopsPage() {
         description="Physical stop inventory, direction breakdowns, and route-stop associations from the Phase 4 processed outputs. No route-line overlay is drawn on the map since the backend does not expose parsed route geometry."
         actions={<RouteSelect value={route} onChange={setRoute} />}
       />
+
+      <RouteExplorer />
 
       <Section title="Route coverage against the project reference list">
         <ApiState isLoading={routesSummary.isLoading} error={routesSummary.error} skeletonHeight="h-40">
